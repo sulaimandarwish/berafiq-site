@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="BeRafiq — Saudi on-demand manufacturing. Upload CAD files and request a managed manufacturing quote.">
+  <title>BeRafiq | Manufacturing Together</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="topbar">Saudi manufacturing network in development · Confidential RFQ intake</div>
+
+  <header class="nav">
+    <a class="brand" href="#top">
+      <span class="brand-main">be<span lang="ar">رفيق</span></span>
+      <small>MANUFACTURING TOGETHER</small>
+    </a>
+    <nav class="links">
+      <a href="#capabilities">Capabilities</a>
+      <a href="#how">How it works</a>
+      <a href="#industries">Industries</a>
+      <a href="#quality">Quality</a>
+    </nav>
+    <a class="btn small" href="#quote">Upload drawing</a>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="hero-copy">
+        <div class="eyebrow"><span></span> SAUDI MANUFACTURING · RIYADH</div>
+        <h1 id="hero-title">From drawing to <em>delivered part.</em></h1>
+        <div class="arabic" lang="ar" dir="rtl">تصنيع محلي. تنفيذ أسرع.</div>
+        <p id="hero-lede">Upload your drawing, quantity and required date. BeRafiq is being built to connect industrial demand with qualified Saudi manufacturing capacity — through one managed route from RFQ to delivery.</p>
+        <div class="hero-actions">
+          <a class="btn" href="#quote">Upload a drawing <b>↗</b></a>
+          <a class="btn ghost" href="#how">See how it works</a>
+        </div>
+        <div class="proof">
+          <div><strong>3D + 2D</strong><span>STEP · STP · STL · DXF · DWG · PDF</span></div>
+          <div><strong>Managed RFQ</strong><span>One request, matched capability</span></div>
+          <div><strong>Saudi-focused</strong><span>Built around local capacity</span></div>
+        </div>
+      </div>
+
+      <section class="quote-card" id="quote">
+        <div class="quote-head">
+          <div><small>REQUEST A QUOTE</small><h2>Start with your files.</h2></div>
+          <span class="secure">🔒 Secure intake</span>
+        </div>
+
+        <form id="rfqForm">
+          <label class="dropzone" id="dropzone">
+            <input id="fileInput" type="file" multiple hidden accept=".step,.stp,.stl,.iges,.igs,.dxf,.dwg,.pdf,.zip,.jpg,.jpeg,.png">
+            <div class="upload-icon">↑</div>
+            <strong>Drop CAD or drawings here</strong>
+            <span>or click to choose files</span>
+            <small>STEP · STP · STL · IGES · DXF · DWG · PDF · ZIP</small>
+          </label>
+          <div id="fileList" class="file-list"></div>
+
+          <div class="form-grid">
+            <label><span>Process</span><select name="process" required><option value="">Select process</option><option>CNC Milling</option><option>CNC Turning</option><option>Prototype / one-off</option><option>Reverse engineering</option><option>Inspection / QA</option><option>Not sure</option></select></label>
+            <label><span>Material</span><select name="material" required><option value="">Select material</option><option>Aluminium</option><option>Carbon steel</option><option>Stainless steel</option><option>Tool steel</option><option>Titanium</option><option>Inconel / nickel alloy</option><option>Engineering plastic</option><option>Not sure / other</option></select></label>
+            <label><span>Quantity</span><input name="quantity" type="number" min="1" placeholder="e.g. 4" required></label>
+            <label><span>Required by</span><select name="lead_time" required><option value="">Select timing</option><option>Urgent — 24–72 hours</option><option>Within 1 week</option><option>Within 2 weeks</option><option>Flexible</option></select></label>
+            <label><span>Name</span><input name="name" placeholder="Your name" required></label>
+            <label><span>Company</span><input name="company" placeholder="Company name" required></label>
+            <label class="wide"><span>Work email</span><input name="email" type="email" placeholder="name@company.com" required></label>
+            <label class="wide"><span>Notes</span><textarea name="notes" rows="3" placeholder="Tolerance, finish, inspection or delivery notes…"></textarea></label>
+          </div>
+          <button class="btn full" type="submit">Request manufacturing quote →</button>
+          <p class="form-note">Files will be stored privately when the Supabase backend is connected.</p>
+          <div id="formStatus" class="status"></div>
+        </form>
+      </section>
+    </section>
+
+    <section class="role-strip">
+      <span>BUILT FOR</span><b>Procurement</b><i></i><b>Maintenance</b><i></i><b>Engineering</b><i></i><b>R&D</b><i></i><b>Operations</b>
+    </section>
+
+    <section class="section" id="capabilities">
+      <div class="section-head">
+        <div><small>CAPABILITIES</small><h2>From urgent one-offs to repeat production.</h2></div>
+        <p>Start with CNC machining and critical industrial parts, then expand the network around proven customer demand.</p>
+      </div>
+      <div class="cards">
+        <article><b>01</b><h3>CNC Milling</h3><p>3-axis, 4-axis and 5-axis capability routing for prototypes, replacement parts and production components.</p></article>
+        <article><b>02</b><h3>CNC Turning</h3><p>Shafts, sleeves, bushings, threaded components and rotating-equipment requirements.</p></article>
+        <article><b>03</b><h3>Urgent Parts</h3><p>Priority capacity matching when the normal supplier cannot meet the required date.</p></article>
+        <article><b>04</b><h3>Prototype & R&D</h3><p>Low-volume parts, fixtures and test components for engineering teams, startups and research.</p></article>
+        <article><b>05</b><h3>Reverse Engineering</h3><p>Support for obsolete or difficult replacement parts where the physical component already exists.</p></article>
+        <article><b>06</b><h3>Inspection & QA</h3><p>Drawing-led inspection requirements, dimensional reporting and supplier quality coordination.</p></article>
+      </div>
+    </section>
+
+    <section class="section dark-block" id="how">
+      <div class="section-head">
+        <div><small>HOW IT WORKS</small><h2>One request. One managed route.</h2></div>
+      </div>
+      <div class="steps">
+        <article><strong>01</strong><h3>Upload</h3><p>Send the 3D model, drawing, quantity, material and delivery requirement.</p></article>
+        <article><strong>02</strong><h3>Match</h3><p>BeRafiq identifies suitable Saudi manufacturing capability and capacity.</p></article>
+        <article><strong>03</strong><h3>Quote</h3><p>You receive one commercial response rather than chasing multiple workshops.</p></article>
+        <article><strong>04</strong><h3>Manufacture</h3><p>Production, quality coordination and delivery are managed through one point of contact.</p></article>
+      </div>
+    </section>
+
+    <section class="section two-col" id="quality">
+      <div>
+        <small>QUALITY + CONFIDENTIALITY</small>
+        <h2>Industrial drawings deserve industrial-grade care.</h2>
+        <p>BeRafiq is designed around controlled file access, qualified suppliers, traceable RFQs and clear inspection requirements.</p>
+        <ul><li>Private customer file storage</li><li>Supplier access only when required</li><li>Material and inspection requirements captured at RFQ stage</li><li>RFQ references for every request</li></ul>
+      </div>
+      <div class="quality-box"><span>RFQ-BR-00127</span><div><b>DRAWING REVIEW</b><em>✓</em></div><div><b>CAPABILITY MATCH</b><em>✓</em></div><div><b>QUALITY REQUIREMENT</b><em>✓</em></div><div><b>DELIVERY TARGET</b><em>✓</em></div></div>
+    </section>
+
+    <section class="section" id="industries">
+      <div class="section-head"><div><small>INDUSTRIES</small><h2>Built around Saudi industrial demand.</h2></div><p>Focused initially on sectors where speed, capability and downtime matter.</p></div>
+      <div class="industry-grid"><span>MRO & maintenance</span><span>Pumps & valves</span><span>Oilfield services</span><span>Industrial manufacturing</span><span>Robotics & hardware</span><span>Universities & R&D</span></div>
+    </section>
+
+    <section class="saudi-section">
+      <div><small>LOCAL CAPABILITY · CONNECTED</small><h2>Built in Saudi Arabia for the next generation of Saudi industry.</h2><p>BeRafiq's long-term aim is to make qualified local manufacturing easier to discover, access and manage — supporting localization, supplier utilization and faster industrial execution.</p></div>
+      <div class="saudi-mark"><span lang="ar">رفيقك في التصنيع</span><small>Your manufacturing companion.</small></div>
+    </section>
+
+    <section class="cta">
+      <div><small>HAVE A DRAWING?</small><h2>Send the requirement.<br>We’ll handle the route.</h2></div>
+      <a class="btn" href="#quote">Request a quote →</a>
+    </section>
+  </main>
+
+  <footer>
+    <div class="brand"><span class="brand-main">be<span lang="ar">رفيق</span></span><small>MANUFACTURING TOGETHER</small></div>
+    <div><b>Riyadh, Saudi Arabia</b><a href="mailto:hello@berafiq.com">hello@berafiq.com</a></div>
+    <div><a href="privacy.html">Privacy</a><a href="#quote">Request quote</a></div>
+    <p>© <span id="year"></span> BeRafiq. Venture in development.</p>
+  </footer>
+
+  <div id="successOverlay" class="success-overlay" hidden>
+    <div class="success-card">
+      <div class="success-check">✓</div>
+      <small>RFQ RECEIVED</small>
+      <h2>Thank you. We’ll respond as soon as possible.</h2>
+      <p>Your manufacturing request has been received.</p>
+      <p>A confirmation email will be sent to <strong id="successEmail"></strong>.</p>
+      <div class="success-ref"><span>RFQ REFERENCE</span><b id="successRfqId"></b></div>
+      <button id="successClose" class="btn">Back to website</button>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
