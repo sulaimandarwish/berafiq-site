@@ -22,3 +22,29 @@ Never place a Supabase service-role key or email API key in browser files.
 
 ## GitHub Pages
 A Pages deployment workflow is included under `.github/workflows/pages.yml`.
+
+
+## Easy content editing
+
+Most customer-facing wording is now in **content.js**.
+
+To edit the site:
+1. Open `content.js` in GitHub.
+2. Click the pencil icon.
+3. Change only the text inside the quotation marks.
+4. Click **Commit changes**.
+5. GitHub Pages redeploys automatically.
+
+Examples you can change from `content.js`:
+- Hero headline and Arabic line
+- Intro paragraph
+- Capabilities and descriptions
+- How-it-works steps
+- Quality messaging
+- Industry names
+- Saudi/local-manufacturing section
+- CTA wording
+- Riyadh location and contact email
+- RFQ success message
+
+For layout, styling or backend behaviour, edit `index.html`, `styles.css`, `app.js` or `config.js`.
