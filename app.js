@@ -1,1 +1,81 @@
-const c=window.BERAFIQ_CONFIG||{},input=document.getElementById("fileInput"),list=document.getElementById("fileList"),drop=document.getElementById("dropzone"),form=document.getElementById("rfqForm"),status=document.getElementById("formStatus"),overlay=document.getElementById("successOverlay");let files=[];document.getElementById("year").textContent=new Date().getFullYear();const fmt=b=>b>1048576?(b/1048576).toFixed(1)+" MB":(b/1024).toFixed(0)+" KB";function render(){list.innerHTML="";files.forEach((f,i)=>{const d=document.createElement("div");d.className="file-item";d.innerHTML="<span><b>"+f.name+"</b> · "+fmt(f.size)+"</span><button type=button>Remove</button>";d.querySelector("button").onclick=()=>{files.splice(i,1);render()};list.appendChild(d)})}function add(x){[...x].forEach(f=>{if(files.length<(c.MAX_FILES||8)&&f.size<=(c.MAX_FILE_MB||25)*1048576)files.push(f)});render()}input.onchange=e=>add(e.target.files);["dragenter","dragover"].forEach(x=>drop.addEventListener(x,e=>{e.preventDefault();drop.classList.add("drag")}));["dragleave","drop"].forEach(x=>drop.addEventListener(x,e=>{e.preventDefault();drop.classList.remove("drag")}));drop.addEventListener("drop",e=>add(e.dataTransfer.files));document.getElementById("successClose").onclick=()=>overlay.hidden=true;async function client(){if(!c.SUPABASE_URL||!c.SUPABASE_ANON_KEY)return null;const s=window.supabase.createClient(c.SUPABASE_URL,c.SUPABASE_ANON_KEY);let r=await s.auth.getSession(),session=r.data.session;if(!session){r=await s.auth.signInAnonymously();if(r.error)throw r.error;session=r.data.session}return{s,session}}form.onsubmit=async e=>{e.preventDefault();if(!files.length){status.textContent="Please upload at least one CAD file or drawing.";return}let live;try{live=await client()}catch(err){status.textContent="Secure upload could not start.";return}if(!live){status.innerHTML="Online RFQ upload is being activated. For now, please email your drawing to <a href=\"mailto:hello@berafiq.com\" style=\"color:#d7bd94;text-decoration:underline\">hello@berafiq.com</a> and we’ll respond as soon as possible.";return}const fd=new FormData(form),btn=form.querySelector("button[type=submit]"),old=btn.innerHTML;btn.disabled=true;btn.textContent="Uploading securely…";try{const uid=live.session.user.id,id="BR-"+new Date().toISOString().slice(0,10).replaceAll("-","")+"-"+crypto.randomUUID().slice(0,8).toUpperCase(),meta=[],paths=[];for(const f of files){const p=uid+"/"+id+"/"+crypto.randomUUID()+"-"+f.name.replace(/[^a-zA-Z0-9._-]/g,"_"),r=await live.s.storage.from(c.STORAGE_BUCKET).upload(p,f);if(r.error)throw r.error;paths.push(p);meta.push({name:f.name,size:f.size,type:f.type,path:p})}const payload={rfq_id:id,user_id:uid,process:fd.get("process"),material:fd.get("material"),quantity:Number(fd.get("quantity")),lead_time:fd.get("lead_time"),name:fd.get("name"),company:fd.get("company"),email:fd.get("email"),notes:fd.get("notes")||null,file_paths:paths,file_meta:meta,status:"new"};let r=await live.s.from("rfqs").insert(payload);if(r.error)throw r.error;await live.s.functions.invoke(c.EMAIL_FUNCTION,{body:{rfqId:id}});document.getElementById("successEmail").textContent=fd.get("email");document.getElementById("successRfqId").textContent=id;overlay.hidden=false;form.reset();files=[];render();status.textContent=""}catch(err){console.error(err);status.textContent="Upload failed. Please try again."}finally{btn.disabled=false;btn.innerHTML=old}};
+const input=document.getElementById("fileInput");
+const list=document.getElementById("fileList");
+const drop=document.getElementById("dropzone");
+const form=document.getElementById("rfqForm");
+const status=document.getElementById("formStatus");
+let files=[];
+
+document.getElementById("year").textContent=new Date().getFullYear();
+
+const fmt=b=>b>1048576?(b/1048576).toFixed(1)+" MB":(b/1024).toFixed(0)+" KB";
+
+function totalBytes(){return files.reduce((n,f)=>n+f.size,0)}
+
+function render(){
+  list.innerHTML="";
+  files.forEach((f,i)=>{
+    const d=document.createElement("div");
+    d.className="file-item";
+    d.innerHTML="<span><b>"+f.name+"</b> · "+fmt(f.size)+"</span><button type=button>Remove</button>";
+    d.querySelector("button").onclick=()=>{files.splice(i,1);syncInput();render()};
+    list.appendChild(d);
+  });
+  if(files.length){
+    const t=document.createElement("div");
+    t.className="file-item";
+    t.innerHTML="<span>Total attachments</span><b>"+fmt(totalBytes())+" / 10 MB</b>";
+    list.appendChild(t);
+  }
+}
+
+function syncInput(){
+  const dt=new DataTransfer();
+  files.forEach(f=>dt.items.add(f));
+  input.files=dt.files;
+}
+
+function add(incoming){
+  const next=[...files,...incoming];
+  const total=next.reduce((n,f)=>n+f.size,0);
+  if(total>10*1024*1024){
+    status.textContent="Attachments must be 10 MB or less in total. Please remove a file or send larger files separately to hello@berafiq.com.";
+    return;
+  }
+  files=next;
+  syncInput();
+  render();
+  status.textContent="";
+}
+
+input.addEventListener("change",e=>{
+  const incoming=[...e.target.files];
+  files=[];
+  add(incoming);
+});
+
+["dragenter","dragover"].forEach(x=>drop.addEventListener(x,e=>{
+  e.preventDefault();
+  drop.classList.add("drag");
+}));
+["dragleave","drop"].forEach(x=>drop.addEventListener(x,e=>{
+  e.preventDefault();
+  drop.classList.remove("drag");
+}));
+drop.addEventListener("drop",e=>add(e.dataTransfer.files));
+
+form.addEventListener("submit",e=>{
+  if(!files.length){
+    e.preventDefault();
+    status.textContent="Please upload at least one CAD file or drawing.";
+    return;
+  }
+  if(totalBytes()>10*1024*1024){
+    e.preventDefault();
+    status.textContent="Attachments must be 10 MB or less in total.";
+    return;
+  }
+  status.textContent="Sending your RFQ…";
+  const btn=form.querySelector("button[type=submit]");
+  btn.disabled=true;
+  btn.textContent="Sending…";
+});
