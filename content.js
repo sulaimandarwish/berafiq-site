@@ -7,7 +7,7 @@
   Avoid changing the property names on the left.
 */
 window.BERAFIQ_CONTENT = {
-  topbar: "Saudi manufacturing network in development · Confidential RFQ intake",
+  topbar: "Saudi manufacturing network in development · Confidential RFQ intake . DEMO PHASE",
   eyebrow: "SAUDI MANUFACTURING · RIYADH",
 
   hero: {
@@ -19,7 +19,7 @@ window.BERAFIQ_CONTENT = {
   },
 
   proof: [
-    { title: "3D + 2D", text: "STEP · STP · STL · DXF · DWG · PDF" },
+    { title: "3D + 2D", text: "STEP · STP · STL · DXF · DWG ·" },
     { title: "Managed RFQ", text: "One request, matched capability" },
     { title: "Saudi-focused", text: "Built around local capacity" }
   ],
@@ -35,8 +35,8 @@ window.BERAFIQ_CONTENT = {
     heading: "From urgent one-offs to repeat production.",
     intro: "Start with CNC machining and critical industrial parts, then expand the network around proven customer demand.",
     items: [
-      { title: "CNC Milling", text: "3-axis, 4-axis and 5-axis capability routing for prototypes, replacement parts and production components." },
-      { title: "CNC Turning", text: "Shafts, sleeves, bushings, threaded components and rotating-equipment requirements." },
+      { title: "CNC Machining", text: "3-axis, 4-axis and 5-axis capability routing for prototypes, replacement parts, production components, Shafts, sleeves, bushings, threaded components and rotating-equipment requirements." },
+      { title: "3D Printing", text: "SLA, SLS, FDM, MJF, Polyjet and DMLS" },
       { title: "Urgent Parts", text: "Priority capacity matching when the normal supplier cannot meet the required date." },
       { title: "Prototype & R&D", text: "Low-volume parts, fixtures and test components for engineering teams, startups and research." },
       { title: "Reverse Engineering", text: "Support for obsolete or difficult replacement parts where the physical component already exists." },
