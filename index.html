@@ -50,12 +50,17 @@
       <section class="quote-card" id="quote">
         <div class="quote-head">
           <div><small>REQUEST A QUOTE</small><h2>Start with your files.</h2></div>
-          <span class="secure">🔒 Secure intake</span>
+          <span class="secure">✉ RFQ email intake</span>
         </div>
 
-        <form id="rfqForm">
+        <form id="rfqForm" action="https://formsubmit.co/hello@berafiq.com" method="POST" enctype="multipart/form-data">
+          <input type="hidden" name="_subject" value="New BeRafiq RFQ submission">
+          <input type="hidden" name="_template" value="table">
+          <input type="hidden" name="_next" value="https://sulaimandarwish.github.io/berafiq-site/thanks.html">
+          <input type="hidden" name="_url" value="https://sulaimandarwish.github.io/berafiq-site/">
+          <input type="hidden" name="_autoresponse" value="Thank you for contacting BeRafiq. We have received your manufacturing request and will respond as soon as possible. Please reply to this email if you need to add any information.">
           <label class="dropzone" id="dropzone">
-            <input id="fileInput" type="file" multiple hidden accept=".step,.stp,.stl,.iges,.igs,.dxf,.dwg,.pdf,.zip,.jpg,.jpeg,.png">
+            <input id="fileInput" name="attachment" type="file" multiple hidden required accept=".step,.stp,.stl,.iges,.igs,.dxf,.dwg,.pdf,.zip,.jpg,.jpeg,.png">
             <div class="upload-icon">↑</div>
             <strong>Drop CAD or drawings here</strong>
             <span>or click to choose files</span>
@@ -74,7 +79,7 @@
             <label class="wide"><span>Notes</span><textarea name="notes" rows="3" placeholder="Tolerance, finish, inspection or delivery notes…"></textarea></label>
           </div>
           <button class="btn full" type="submit">Request manufacturing quote →</button>
-          <p class="form-note">Your drawings and RFQ details are handled confidentially.</p>
+          <p class="form-note">Your RFQ details and attached files are emailed to hello@berafiq.com. Maximum total attachment size: 10 MB.</p>
           <div id="formStatus" class="status"></div>
         </form>
       </section>
@@ -116,7 +121,7 @@
         <small>QUALITY + CONFIDENTIALITY</small>
         <h2>Industrial drawings deserve industrial-grade care.</h2>
         <p>BeRafiq is designed around controlled file access, qualified suppliers, traceable RFQs and clear inspection requirements.</p>
-        <ul><li>Private customer file storage</li><li>Supplier access only when required</li><li>Material and inspection requirements captured at RFQ stage</li><li>RFQ references for every request</li></ul>
+        <ul><li>RFQ files delivered directly to the BeRafiq inbox</li><li>Supplier access only when required</li><li>Material and inspection requirements captured at RFQ stage</li><li>RFQ references for every request</li></ul>
       </div>
       <div class="quality-box"><span>RFQ-BR-00127</span><div><b>DRAWING REVIEW</b><em>✓</em></div><div><b>CAPABILITY MATCH</b><em>✓</em></div><div><b>QUALITY REQUIREMENT</b><em>✓</em></div><div><b>DELIVERY TARGET</b><em>✓</em></div></div>
     </section>
@@ -156,8 +161,6 @@
     </div>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="config.js"></script>
   <script src="content.js"></script>
   <script src="app.js"></script>
 </body>
