@@ -1,3 +1,14 @@
+const tolRadios=document.querySelectorAll('input[name="tolerance_required"]');
+const tolDetails=document.getElementById("toleranceDetails");
+const tolInput=document.getElementById("toleranceValues");
+function updateToleranceUI(){
+  const required=[...tolRadios].find(r=>r.checked)?.value==="yes";
+  tolDetails.hidden=!required;
+  tolInput.required=required;
+  if(!required) tolInput.value="";
+}
+tolRadios.forEach(r=>r.addEventListener("change",updateToleranceUI));
+updateToleranceUI();
 const input=document.getElementById("fileInput");
 const list=document.getElementById("fileList");
 const drop=document.getElementById("dropzone");
