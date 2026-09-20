@@ -16,22 +16,21 @@ window.BERAFIQ_CONTENT = {
 
   quoteHeading: "Start with your files.",
 
-  capabilitiesHeading: "From urgent one-offs to repeat production.",
-  capabilitiesIntro: "Start with CNC machining and critical industrial parts, then expand the network around proven customer demand.",
+  capabilitiesHeading: "Flexible manufacturing across multiple processes.",
+  capabilitiesIntro: "Access CNC machining, 3D printing, sheet metal and urgent manufacturing through one managed RFQ route.",
 
   capabilities: [
-    ["CNC Milling", "3-axis, 4-axis and 5-axis capability routing for prototypes, replacement parts and production components."],
+    ["CNC Milling", "3-axis, 4-axis and 5-axis capability routing for custom and production components."],
     ["CNC Turning", "Shafts, sleeves, bushings, threaded components and rotating-equipment requirements."],
-    ["Urgent Parts", "Priority capacity matching when the normal supplier cannot meet the required date."],
-    ["Prototype & R&D", "Low-volume parts, fixtures and test components for engineering teams, startups and research."],
-    ["Reverse Engineering", "Support for obsolete or difficult replacement parts where the physical component already exists."],
-    ["Inspection & QA", "Drawing-led inspection requirements, dimensional reporting and supplier quality coordination."]
+    ["3D Printing", "Additive manufacturing for custom parts, tooling, fixtures and low-volume component requirements."],
+    ["Sheet Metal", "Laser-cut, bent and formed sheet-metal components routed to suitable local manufacturing capability."],
+    ["Urgent Parts", "Priority capacity matching when the normal supplier cannot meet the required date."]
   ],
 
   howHeading: "One request. One managed route.",
 
-  qualityHeading: "Industrial drawings deserve industrial-grade care.",
-  qualityBody: "BeRafiq is designed around controlled file access, qualified suppliers, traceable RFQs and clear inspection requirements.",
+  qualityHeading: "Your drawings stay controlled throughout the RFQ process.",
+  qualityBody: "BeRafiq is designed around controlled file handling, qualified suppliers, traceable RFQs and clear manufacturing specifications.",
 
   industriesHeading: "Built around Saudi industrial demand.",
   industriesBody: "Focused initially on sectors where speed, capability and downtime matter.",
