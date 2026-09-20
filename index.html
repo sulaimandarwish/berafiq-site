@@ -110,6 +110,27 @@
             </select></label>
             <label><span>Quantity</span><input name="quantity" type="number" min="1" placeholder="e.g. 4" required></label>
             <label><span>Required by</span><select name="lead_time" required><option value="">Select timing</option><option>Urgent — 24–72 hours</option><option>Within 1 week</option><option>Within 2 weeks</option><option>Flexible</option></select></label>
+
+            <div class="wide tolerance-block">
+              <span class="field-label">Tolerance required?</span>
+              <div class="toggle-options" role="group" aria-label="Tolerance required">
+                <label class="toggle-choice">
+                  <input type="radio" name="tolerance_required" value="no" checked>
+                  <span>No</span>
+                </label>
+                <label class="toggle-choice">
+                  <input type="radio" name="tolerance_required" value="yes">
+                  <span>Yes</span>
+                </label>
+              </div>
+            </div>
+
+            <label class="wide tolerance-details" id="toleranceDetails" hidden>
+              <span>Tolerance values</span>
+              <input name="tolerance_values" id="toleranceValues" placeholder="e.g. ±0.05 mm, H7, or see drawing">
+              <small>Enter the required tolerance or reference the uploaded drawing.</small>
+            </label>
+
             <label><span>Name</span><input name="name" placeholder="Your name" required></label>
             <label><span>Company</span><input name="company" placeholder="Company name" required></label>
             <label class="wide"><span>Work email</span><input name="email" type="email" placeholder="name@company.com" required></label>
