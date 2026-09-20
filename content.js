@@ -6,7 +6,7 @@
 // ============================================================
 
 window.BERAFIQ_CONTENT = {
-  topbar: "Saudi manufacturing network in development · Confidential RFQ intake",
+  topbar: "DEMO PHASE · Saudi manufacturing network in development · Confidential RFQ intake",
 
   brand: {
     tagline: "MANUFACTURING TOGETHER"
