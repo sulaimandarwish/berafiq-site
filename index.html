@@ -70,7 +70,51 @@
 
           <div class="form-grid">
             <label><span>Process</span><select name="process" required><option value="">Select process</option><option>CNC Milling</option><option>CNC Turning</option><option>3D Printing</option><option>Sheet Metal</option><option>Not sure</option></select></label>
-            <label><span>Material</span><select name="material" required><option value="">Select material</option><option>Aluminium</option><option>Carbon steel</option><option>Stainless steel</option><option>Tool steel</option><option>Titanium</option><option>Inconel / nickel alloy</option><option>Engineering plastic</option><option>Not sure / other</option></select></label>
+            <label><span>Material</span><select name="material" required>
+              <option value="">Select material</option>
+              <optgroup label="Machining metals">
+                <option>Aluminium</option>
+                <option>Carbon steel</option>
+                <option>Stainless steel</option>
+                <option>Tool steel</option>
+                <option>Titanium</option>
+                <option>Inconel / nickel alloy</option>
+              </optgroup>
+              <optgroup label="3D printing — FDM / FFF">
+                <option>PLA</option>
+                <option>PETG</option>
+                <option>ABS</option>
+                <option>ASA</option>
+                <option>TPU / flexible</option>
+                <option>Polycarbonate (PC)</option>
+                <option>Nylon (PA)</option>
+                <option>Carbon-fibre reinforced nylon (PA-CF)</option>
+                <option>PEEK / high-temperature polymer</option>
+              </optgroup>
+              <optgroup label="3D printing — SLS / MJF">
+                <option>PA12 Nylon</option>
+                <option>PA11 Nylon</option>
+                <option>TPU powder</option>
+              </optgroup>
+              <optgroup label="3D printing — SLA / resin">
+                <option>Standard resin</option>
+                <option>Tough / ABS-like resin</option>
+                <option>Engineering resin</option>
+                <option>High-temperature resin</option>
+                <option>Flexible resin</option>
+              </optgroup>
+              <optgroup label="Metal 3D printing">
+                <option>Aluminium — metal 3D printing</option>
+                <option>Stainless steel — metal 3D printing</option>
+                <option>Tool steel — metal 3D printing</option>
+                <option>Titanium — metal 3D printing</option>
+                <option>Inconel — metal 3D printing</option>
+              </optgroup>
+              <optgroup label="Other">
+                <option>Engineering plastic</option>
+                <option>Not sure / other</option>
+              </optgroup>
+            </select></label>
             <label><span>Quantity</span><input name="quantity" type="number" min="1" placeholder="e.g. 4" required></label>
             <label><span>Required by</span><select name="lead_time" required><option value="">Select timing</option><option>Urgent — 24–72 hours</option><option>Within 1 week</option><option>Within 2 weeks</option><option>Flexible</option></select></label>
             <label><span>Name</span><input name="name" placeholder="Your name" required></label>
@@ -97,7 +141,7 @@
       <div class="cards">
         <article><b>01</b><h3>CNC Milling</h3><p>3-axis, 4-axis and 5-axis capability routing for custom and production components.</p></article>
         <article><b>02</b><h3>CNC Turning</h3><p>Shafts, sleeves, bushings, threaded components and rotating-equipment requirements.</p></article>
-        <article><b>03</b><h3>3D Printing</h3><p>Additive manufacturing for custom parts, tooling, fixtures and low-volume component requirements.</p></article>
+        <article><b>03</b><h3>3D Printing</h3><p>FDM, SLS/MJF, resin and metal additive options including PLA, PETG, ABS, ASA, Nylon/PA12, TPU, engineering resins and selected metal alloys.</p></article>
         <article><b>04</b><h3>Sheet Metal</h3><p>Laser-cut, bent and formed sheet-metal components routed to suitable local manufacturing capability.</p></article>
         <article><b>05</b><h3>Urgent Parts</h3><p>Priority capacity matching when the normal supplier cannot meet the required date.</p></article>
       </div>
