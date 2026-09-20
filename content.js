@@ -1,106 +1,154 @@
-/*
-  BeRafiq website content
-  =======================
-  Change the text between quotes below.
-  Commit this file in GitHub and the live site will update automatically.
-
-  You normally do NOT need to edit index.html.
-*/
+// ============================================================
+// BERAFIQ WEBSITE CONTENT
+// Edit the words inside the quotation marks below.
+// Save/commit this file and GitHub Pages will redeploy automatically.
+// Avoid changing property names such as "heroTitle" or punctuation outside quotes.
+// ============================================================
 
 window.BERAFIQ_CONTENT = {
   topbar: "Saudi manufacturing network in development · Confidential RFQ intake",
 
-  heroTitle: "From drawing to <em>delivered part.</em>",
-  heroArabic: "تصنيع محلي. تنفيذ أسرع.",
-  heroDescription: "Upload your drawing, quantity and required date. BeRafiq is being built to connect industrial demand with qualified Saudi manufacturing capacity — through one managed route from RFQ to delivery.",
+  brand: {
+    tagline: "MANUFACTURING TOGETHER"
+  },
 
-  quoteHeading: "Start with your files.",
+  nav: {
+    capabilities: "Capabilities",
+    how: "How it works",
+    industries: "Industries",
+    quality: "Confidentiality",
+    quote: "Upload drawing"
+  },
 
-  capabilitiesHeading: "Flexible manufacturing across multiple processes.",
-  capabilitiesIntro: "Access CNC machining, 3D printing, sheet metal and urgent manufacturing through one managed RFQ route.",
+  hero: {
+    eyebrow: "SAUDI MANUFACTURING · RIYADH",
+    titleBefore: "From drawing to",
+    titleEmphasis: "delivered part.",
+    arabic: "تصنيع محلي. تنفيذ أسرع.",
+    description: "Upload your drawing, quantity and required date. BeRafiq is being built to connect industrial demand with qualified Saudi manufacturing capacity — through one managed route from RFQ to delivery.",
+    primaryButton: "Upload a drawing ↗",
+    secondaryButton: "See how it works",
+    proof: [
+      { title: "3D + 2D", text: "STEP · STP · STL · DXF · DWG · PDF" },
+      { title: "Managed RFQ", text: "One request, matched capability" },
+      { title: "Saudi-focused", text: "Built around local capacity" }
+    ]
+  },
 
-  capabilities: [
-    ["CNC Milling", "3-axis, 4-axis and 5-axis capability routing for custom and production components."],
-    ["CNC Turning", "Shafts, sleeves, bushings, threaded components and rotating-equipment requirements."],
-    ["3D Printing", "Polymer and resin 3D printing for prototypes, tooling, fixtures and low-volume component requirements."],
-    ["Sheet Metal", "Laser-cut, bent and formed sheet-metal components routed to suitable local manufacturing capability."],
-    ["Urgent Parts", "Priority capacity matching when the normal supplier cannot meet the required date."]
+  quote: {
+    label: "REQUEST A QUOTE",
+    title: "Start with your files.",
+    secure: "✉ RFQ email intake",
+    uploadTitle: "Drop CAD or drawings here",
+    uploadSubtitle: "or click to choose files",
+    uploadFormats: "STEP · STP · STL · IGES · DXF · DWG · PDF · ZIP",
+    submitButton: "Request manufacturing quote →",
+    note: "Your RFQ details and attached files are emailed to hello@berafiq.com. Maximum total attachment size: 10 MB."
+  },
+
+  builtFor: [
+    "Procurement",
+    "Maintenance",
+    "Engineering",
+    "Supply Chain",
+    "Operations"
   ],
 
-  howHeading: "One request. One managed route.",
+  capabilities: {
+    label: "CAPABILITIES",
+    title: "Manufacturing capability, managed through one RFQ.",
+    intro: "BeRafiq is being built to route each requirement to suitable Saudi manufacturing capability based on process, material, quantity and required delivery date.",
+    cards: [
+      {
+        title: "CNC Milling",
+        text: "Custom milled components, prototypes and production parts routed to suitable 3-axis, 4-axis or 5-axis machining capability."
+      },
+      {
+        title: "CNC Turning",
+        text: "Shafts, sleeves, bushings, pins, threaded parts and other rotational components across a range of engineering materials."
+      },
+      {
+        title: "3D Printing",
+        text: "Rapid prototypes, functional parts and low-volume production using polymer and resin additive-manufacturing processes."
+      },
+      {
+        title: "Sheet Metal & Fabrication",
+        text: "Laser cutting, bending, forming and fabricated components routed according to material, thickness and drawing requirements."
+      },
+      {
+        title: "Reverse Engineering",
+        text: "Support for worn, obsolete or difficult-to-source components where an existing part needs to be measured, reproduced or locally replaced."
+      },
+      {
+        title: "Urgent & Replacement Parts",
+        text: "Priority sourcing for breakdowns, maintenance requirements and time-critical parts when the normal supplier cannot meet the required lead time."
+      }
+    ]
+  },
 
-  qualityHeading: "Your drawings stay controlled throughout the RFQ process.",
-  qualityBody: "BeRafiq is designed around controlled file handling, qualified suppliers, traceable RFQs and clear manufacturing specifications.",
+  how: {
+    label: "HOW IT WORKS",
+    title: "One request. One managed route.",
+    steps: [
+      { title: "Upload", text: "Send the 3D model, drawing, quantity, material and delivery requirement." },
+      { title: "Match", text: "BeRafiq identifies suitable Saudi manufacturing capability and capacity." },
+      { title: "Quote", text: "You receive one commercial response rather than chasing multiple workshops." },
+      { title: "Manufacture", text: "Production, quality coordination and delivery are managed through one point of contact." }
+    ]
+  },
 
-  industriesHeading: "Built around Saudi industrial demand.",
-  industriesBody: "Focused initially on sectors where speed, capability and downtime matter.",
+  quality: {
+    label: "CONFIDENTIALITY + CONTROL",
+    title: "Your drawings stay controlled throughout the RFQ process.",
+    text: "BeRafiq is designed around controlled file handling, qualified suppliers, traceable RFQs and clear manufacturing specifications.",
+    bullets: [
+      "RFQ files delivered directly to the BeRafiq inbox",
+      "Supplier access only when required",
+      "Material, tolerance and manufacturing requirements captured at RFQ stage",
+      "RFQ references for every request"
+    ]
+  },
 
-  saudiHeading: "Built in Saudi Arabia for the next generation of Saudi industry.",
-  saudiBody: "BeRafiq's long-term aim is to make qualified local manufacturing easier to discover, access and manage — supporting localization, supplier utilization and faster industrial execution.",
-  saudiArabic: "رفيقك في التصنيع",
-  saudiTagline: "Your manufacturing companion.",
+  industries: {
+    label: "INDUSTRIES",
+    title: "Built around Saudi industrial demand.",
+    intro: "Focused initially on sectors where speed, capability and downtime matter.",
+    items: [
+      "MRO & maintenance",
+      "Pumps & valves",
+      "Oilfield services",
+      "Industrial manufacturing",
+      "Robotics & hardware",
+      "Equipment & machinery"
+    ]
+  },
 
-  ctaHeading: "Send the requirement.<br>We’ll handle the route.",
+  saudi: {
+    label: "LOCAL CAPABILITY · CONNECTED",
+    title: "Built in Saudi Arabia for the next generation of Saudi industry.",
+    text: "BeRafiq's long-term aim is to make qualified local manufacturing easier to discover, access and manage — supporting localization, supplier utilization and faster industrial execution.",
+    arabic: "رفيقك في التصنيع",
+    english: "Your manufacturing companion."
+  },
 
-  location: "Riyadh, Saudi Arabia",
-  contactEmail: "hello@berafiq.com",
+  cta: {
+    label: "HAVE A DRAWING?",
+    titleLine1: "Send the requirement.",
+    titleLine2: "We’ll handle the route.",
+    button: "Request a quote →"
+  },
 
-  successHeading: "Thank you. We’ll respond as soon as possible.",
-  successBody: "Your manufacturing request has been received."
-};
+  success: {
+    label: "RFQ RECEIVED",
+    title: "Thank you. We’ll respond as soon as possible.",
+    line1: "Your manufacturing request has been received.",
+    line2: "A confirmation email will be sent to",
+    button: "Back to website"
+  },
 
-(function () {
-  const c = window.BERAFIQ_CONTENT || {};
-  const one = (selector) => document.querySelector(selector);
-  const setText = (selector, value) => {
-    const el = one(selector);
-    if (el && value !== undefined) el.textContent = value;
-  };
-  const setHTML = (selector, value) => {
-    const el = one(selector);
-    if (el && value !== undefined) el.innerHTML = value;
-  };
-
-  setText(".topbar", c.topbar);
-  setHTML("#hero-title", c.heroTitle);
-  setText(".hero .arabic", c.heroArabic);
-  setText("#hero-lede", c.heroDescription);
-  setText(".quote-head h2", c.quoteHeading);
-
-  setText("#capabilities .section-head h2", c.capabilitiesHeading);
-  setText("#capabilities .section-head > p", c.capabilitiesIntro);
-
-  const cards = document.querySelectorAll("#capabilities .cards article");
-  (c.capabilities || []).forEach((item, i) => {
-    if (!cards[i]) return;
-    const h = cards[i].querySelector("h3");
-    const p = cards[i].querySelector("p");
-    if (h) h.textContent = item[0];
-    if (p) p.textContent = item[1];
-  });
-
-  setText("#how .section-head h2", c.howHeading);
-  setText("#quality h2", c.qualityHeading);
-  setText("#quality > div:first-child > p", c.qualityBody);
-
-  setText("#industries .section-head h2", c.industriesHeading);
-  setText("#industries .section-head > p", c.industriesBody);
-
-  setText(".saudi-section h2", c.saudiHeading);
-  setText(".saudi-section > div:first-child > p", c.saudiBody);
-  setText(".saudi-mark span", c.saudiArabic);
-  setText(".saudi-mark small", c.saudiTagline);
-
-  setHTML(".cta h2", c.ctaHeading);
-
-  setText("footer > div:nth-child(2) b", c.location);
-  const email = one("footer > div:nth-child(2) a");
-  if (email && c.contactEmail) {
-    email.textContent = c.contactEmail;
-    email.href = "mailto:" + c.contactEmail;
+  company: {
+    location: "Riyadh, Saudi Arabia",
+    email: "hello@berafiq.com",
+    footerText: "BeRafiq. Venture in development."
   }
-
-  setText(".success-card h2", c.successHeading);
-  const successParagraph = one(".success-card h2 + p");
-  if (successParagraph && c.successBody) successParagraph.textContent = c.successBody;
-})();
+};
