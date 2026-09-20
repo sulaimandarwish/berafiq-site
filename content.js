@@ -22,7 +22,7 @@ window.BERAFIQ_CONTENT = {
   capabilities: [
     ["CNC Milling", "3-axis, 4-axis and 5-axis capability routing for custom and production components."],
     ["CNC Turning", "Shafts, sleeves, bushings, threaded components and rotating-equipment requirements."],
-    ["3D Printing", "Additive manufacturing for custom parts, tooling, fixtures and low-volume component requirements."],
+    ["3D Printing", "Polymer and resin 3D printing for prototypes, tooling, fixtures and low-volume component requirements."],
     ["Sheet Metal", "Laser-cut, bent and formed sheet-metal components routed to suitable local manufacturing capability."],
     ["Urgent Parts", "Priority capacity matching when the normal supplier cannot meet the required date."]
   ],
