@@ -12,11 +12,11 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="journey.css">
-  <link rel="stylesheet" href="estimator.css">
+  <link rel="stylesheet" href="estimator.css?v=3">
 </head>
 <body>
   <aside class="version-banner" aria-label="Website version">
-    <strong>V2 preview</strong><span>Budget estimate integration · live calculation service pending</span><a href="../">← Open original V1</a>
+    <strong>V2 preview</strong><span>CNC + 3D-printing budget estimates · calculated in your browser</span><a href="../">← Open original V1</a>
   </aside>
   <div class="topbar">Demo phase · Saudi manufacturing network in development · Confidential RFQ intake</div>
 
@@ -164,18 +164,25 @@
           <section id="estimatePanel" class="estimate-panel" hidden aria-labelledby="estimateTitle">
             <span class="estimate-label">OPTIONAL · BUDGET ESTIMATE</span>
             <h3 id="estimateTitle">Get an estimate before requesting a quote.</h3>
-            <p class="estimate-availability">Preview: the calculation service is not connected yet. You can explore the form and request a confirmed quote.</p>
-            <p>For a single aluminium 6061 STEP part. See an approximate price and production work time. <strong>This is an estimate, not a confirmed quotation.</strong></p>
-            <label class="estimate-consent"><input type="checkbox" id="estimateAssumptions"><span>I confirm aluminium 6061, an ordinary as-machined finish and no specified tight tolerances. The estimate excludes tax, delivery, urgent service and extra requirements in my notes or drawings.</span></label>
-            <p><small>Calculating sends the selected STEP file to BeRafiq’s estimate service for analysis. It does not submit your RFQ or email your files.</small></p>
+            <p class="estimate-availability">Estimation runs in your browser. No separate server is required. Rates are illustrative and need supplier confirmation.</p>
+            <p>Upload one STEP/STP or closed STL part. Choose CNC machining or polymer/resin 3D printing to estimate price and production work time. <strong>This is an estimate, not a confirmed quotation.</strong></p>
+            <label class="estimate-consent"><input type="checkbox" id="estimateAssumptions"><span>I accept the material grade and process assumptions shown here. This is an uncalibrated budget estimate, excluding tax, delivery, urgency, specified tolerances and additional drawing/notes requirements.</span></label>
+            <p id="estimateProfile"></p>
+            <div id="stlSetting" hidden><label>STL units<select id="estimateUnits"><option value="1">Millimetres (mm)</option><option value="25.4">Inches</option><option value="10">Centimetres (cm)</option><option value="1000">Metres (m)</option></select></label><small>STL has no built-in units. Confirm your export units.</small></div>
+            <div id="printSettings" hidden class="estimate-print-settings">
+              <label id="infillSetting">FDM infill (%)<input id="estimateInfill" type="number" min="0" max="100" value="20"></label>
+              <label id="supportSetting">Support / waste allowance (%)<input id="estimateSupport" type="number" min="0" max="100" value="20"></label>
+              <small>Printing time is a model, not a slicer result. Orientation follows the uploaded file. Powder profiles use representative SLS assumptions.</small>
+            </div>
+            <p><small>Your model stays in your browser during estimation. The STEP reader downloads from a third-party CDN. Submitting the RFQ below still emails the selected files.</small></p>
             <button id="estimateButton" class="btn ghost" type="button">Calculate budget estimate</button>
             <p id="estimateMessage" class="estimate-message" role="status" aria-live="polite"></p>
             <div id="estimateResult" class="estimate-result" hidden>
               <strong>BUDGET ESTIMATE · NOT A CONFIRMED QUOTE</strong>
               <span id="estimatePrice" class="estimate-price"></span>
               <p id="estimateTotal"></p>
-              <p id="estimateCalibration"></p>
-              <dl><dt>Process candidate</dt><dd id="estimateMachine"></dd><dt>Estimated setup</dt><dd id="estimateSetup"></dd><dt>Estimated machine cycle</dt><dd id="estimateCycle"></dd><dt>Estimated batch production</dt><dd id="estimateProduction"></dd></dl>
+              <p id="estimateCalibration"></p><p id="estimateGeometry"></p><p id="estimateDetails"></p>
+              <dl><dt>Process candidate</dt><dd id="estimateMachine"></dd><dt>Estimated setup</dt><dd id="estimateSetup"></dd><dt>Estimated machine / print cycle</dt><dd id="estimateCycle"></dd><dt>Estimated batch production</dt><dd id="estimateProduction"></dd></dl>
               <p><small>Machine access and setup counts are preliminary. Production hours are processing work, not a delivery date. Final price, specifications and delivery are confirmed in your manufacturing quote.</small></p>
             </div>
             <input type="hidden" id="estimateSummary" name="budget_estimate">
@@ -265,8 +272,9 @@
   <script src="content.js"></script>
   <script src="app.js"></script>
   <script src="journey.js"></script>
-  <script src="estimator-config.js"></script>
-  <script src="estimator.js"></script>
+  <script src="estimator-config.js?v=3"></script>
+  <script src="estimate-model.js?v=3"></script>
+  <script src="estimator.js?v=3"></script>
 </body>
 </html>
 

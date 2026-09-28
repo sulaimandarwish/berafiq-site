@@ -117,6 +117,7 @@ function add(incoming){
   const next=[...files,...incoming];
   const total=next.reduce((n,f)=>n+f.size,0);
   if(total>10*1024*1024){
+    syncInput();render(); // Keep rejected uploads consistent with the visible file list and estimate state.
     status.textContent="Attachments must be 10 MB or less in total. Please remove a file or send larger files separately to hello@berafiq.com.";
     return;
   }
