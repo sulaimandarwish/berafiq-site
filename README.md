@@ -48,3 +48,10 @@ Examples you can change from `content.js`:
 - RFQ success message
 
 For layout, styling or backend behaviour, edit `index.html`, `styles.css`, `app.js` or `config.js`.
+
+
+## Optional budget estimate (draft integration)
+
+See [ESTIMATOR.md](ESTIMATOR.md) for local preview, customer disclosures,
+server-owned profit/allowance settings, deployment prerequisites and rollback.
+GitHub Pages alone cannot run the Python STEP service.

@@ -1,0 +1,16 @@
+# Local Python environments and bytecode are not source code.
+.estimate-venv/
+.venv/
+__pycache__/
+*.pyc
+# Never commit customer files or actual supplier/private pricing profiles.
+uploads/
+private_rates/
+*.step
+*.stp
+.env
+*.log
+
+# Frontend test dependencies and staged Pages output.
+node_modules/
+public/
