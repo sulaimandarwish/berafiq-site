@@ -92,7 +92,9 @@ function render(){
   files.forEach((f,i)=>{
     const d=document.createElement("div");
     d.className="file-item";
-    d.innerHTML="<span><b>"+f.name+"</b> · "+fmt(f.size)+"</span><button type=button>Remove</button>";
+    d.innerHTML="<span><b></b></span><button type=button>Remove</button>"; // Create fixed markup; filenames must remain text.
+    d.querySelector("b").textContent=f.name; // Prevent a filename being interpreted as HTML.
+    d.querySelector("span").append(" · "+fmt(f.size)); // Append the human-readable size safely.
     d.querySelector("button").onclick=()=>{files.splice(i,1);syncInput();render()};
     list.appendChild(d);
   });
@@ -108,6 +110,7 @@ function syncInput(){
   const dt=new DataTransfer();
   files.forEach(f=>dt.items.add(f));
   input.files=dt.files;
+  window.dispatchEvent(new Event("berafiq:files-changed")); // Invalidate estimates after upload, drag/drop or file removal.
 }
 
 function add(incoming){
@@ -155,3 +158,4 @@ form.addEventListener("submit",e=>{
   btn.disabled=true;
   btn.textContent="Sending…";
 });
+

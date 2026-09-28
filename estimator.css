@@ -1,0 +1,15 @@
+/* Scope estimator styling so the existing RFQ design is preserved. */
+.estimate-panel{border:1px solid #3f554c;background:rgba(105,174,141,.06);padding:20px;border-radius:14px;margin:20px 0}
+.estimate-panel h3{margin:0 0 8px;font-size:20px}
+.estimate-panel p,.estimate-panel small{line-height:1.6}
+.estimate-panel .estimate-label{color:#a9d5bd;letter-spacing:.1em;font-size:11px;font-weight:700}
+.estimate-panel .estimate-consent{display:flex;gap:10px;align-items:flex-start;margin:16px 0;font-size:13px}
+.estimate-panel .estimate-consent input{width:18px;height:18px;flex-shrink:0;margin-top:3px}
+.estimate-panel .estimate-result{border-top:1px solid #3f554c;margin-top:18px;padding-top:18px}
+.estimate-panel .estimate-price{font-size:26px;font-weight:800;display:block;margin:8px 0}
+.estimate-panel dl{display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:13px}
+.estimate-panel dt{opacity:.8}.estimate-panel dd{margin:0;text-align:right}
+.estimate-panel .estimate-message{font-size:13px;margin-top:12px}
+.estimate-panel button:disabled{opacity:.6;cursor:wait}
+.estimate-panel [hidden]{display:none!important}
+@media(max-width:480px){.estimate-panel{padding:14px}.estimate-panel .estimate-price{font-size:22px}}

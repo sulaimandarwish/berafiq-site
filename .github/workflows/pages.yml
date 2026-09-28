@@ -21,10 +21,15 @@ jobs:
         uses: actions/checkout@v6
       - name: Configure Pages
         uses: actions/configure-pages@v5
+      - name: Stage public site files
+        run: |
+          mkdir -p public
+          cp .nojekyll index.html 404.html privacy.html thanks.html robots.txt styles.css app.js config.js content.js journey.css journey.js estimator.css estimator.js estimator-config.js public/
       - name: Upload site
         uses: actions/upload-pages-artifact@v4
         with:
-          path: .
+          path: public
       - name: Deploy
         id: deployment
         uses: actions/deploy-pages@v4
+
