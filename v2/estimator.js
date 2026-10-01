@@ -7,7 +7,7 @@
   const form=document.getElementById('rfqForm'), input=document.getElementById('fileInput'); // Reuse existing requirements and files.
   const $=id=>document.getElementById(id), field=name=>form.elements.namedItem(name)?.value||''; // Provide short safe element and field lookups.
   const button=$('estimateButton'), message=$('estimateMessage'), output=$('estimateResult'), summary=$('estimateSummary'); // Keep output targets together.
-  let worker, cancelRead, revision=0, cachedFile, cachedScale, cachedGeometry; // Track cancellable work and reusable geometry measurements.
+  let worker, cancelRead, revision=0, autoTimer, cachedFile, cachedScale, cachedGeometry; // Track cancellable work and reusable geometry measurements.
   const money=value=>new Intl.NumberFormat('en-SA',{style:'currency',currency:'SAR',maximumFractionDigits:0}).format(value); // Avoid false decimal precision in a rough customer estimate.
   function requirements() { // Reflect the selected material's manufacturing assumptions before calculation.
     const m=model.materials[field('material')]; // Resolve the declared material option.
@@ -16,15 +16,16 @@
     $('infillSetting').hidden=m?.technology!=='FDM'; // Infill applies only to the extrusion model.
     $('supportSetting').hidden=m?.technology==='SLS'; // Powder model has its own fixed refresh allowance.
     $('estimateInfill').disabled=m?.technology!=='FDM';$('estimateSupport').disabled=!(m?.mode==='print'&&m.technology!=='SLS'); // Exclude hidden print controls from RFQ form validation.
-    $('stlSetting').hidden=!(input.files.length===1&&/\.stl$/i.test(input.files[0].name)); // Require explicit units for STL only.
+    $('stlSetting').hidden=!([...input.files].filter(f=>/\.(step|stp|stl)$/i.test(f.name)).length===1&&[...input.files].some(f=>/\.stl$/i.test(f.name))); // Require explicit units for STL only.
   } // End contextual requirements.
   function reset() { // Invalidate estimates after any input change.
+    clearTimeout(autoTimer); // Cancel any pending automatic refresh.
     revision++; cancelRead?.(); cancelRead=null; worker?.terminate(); worker=null; // Cancel expensive geometry processing and obsolete responses.
     output.hidden=true;summary.value='';message.textContent=''; // Remove stale prices and RFQ attachments.
     button.disabled=false;button.textContent='Calculate budget estimate'; // Restore the action for new requirements.
     requirements(); // Refresh visible material and print assumptions.
   } // End invalidation.
-  form.addEventListener('input',reset);form.addEventListener('change',reset); // Cover form entry, radio buttons and select controls.
+  form.addEventListener('input',reset);form.addEventListener('change',()=>{reset();if(cachedGeometry&&$('estimateAssumptions').checked&&!$('requestStage2').hidden)autoTimer=setTimeout(()=>button.click(),150);}); // Cover form entry, radio buttons and select controls.
   window.addEventListener('berafiq:files-changed',reset); // Cover drag/drop and file removals from the existing uploader.
   requirements(); // Initialise conditional controls.
   function readGeometry(file,scale) { // Read supported geometry off the main UI thread.
@@ -44,12 +45,11 @@
     }); // Finish geometry promise.
   } // End worker adapter.
   button.addEventListener('click',async()=>{ // Calculate only on explicit customer action.
-    reset(); const current=revision, files=[...input.files], m=model.materials[field('material')]; // Capture the order being priced.
-    const info={material:field('material'),process:field('process'),quantity:Number(field('quantity')),infill:Number($('estimateInfill').value),support:Number($('estimateSupport').value)}; // Capture all cost-driving requirements.
+    reset(); const current=revision, files=[...input.files].filter(f=>/\.(step|stp|stl)$/i.test(f.name)), m=model.materials[field('material')]; // Capture the order being priced.
+    const info={material:field('material'),process:field('process'),quantity:Number(field('quantity')),infill:Number($('estimateInfill').value),support:Number($('estimateSupport').value),tolerance:field('tolerance'),inspection:field('inspection'),coverage:field('inspection_coverage')}; // Capture all cost-driving requirements.
     if(files.length!==1||!(/\.(step|stp|stl)$/i.test(files[0].name))){message.textContent='For an estimate, select one STEP/STP or closed STL model. PDF, images and other drawings can still be sent for a quote.';return;} // Require measurable 3D geometry.
     if(files[0].size>10*1024*1024){message.textContent='Use a model up to 10 MB for browser estimation.';return;} // Bound local processing effort.
     if(!m){message.textContent='Select a specific material. “Not sure / other” needs a confirmed quote.';return;} // Do not invent a price for unknown material.
-    if(field('tolerance_required')==='yes'){message.textContent='Specified tolerances require review. Please request a manufacturing quote.';return;} // Avoid pricing unmodelled quality requirements.
     if(!$('estimateAssumptions').checked){message.textContent='Please confirm the estimate assumptions.';return;} // Require acknowledgement of uncalibrated rates and process limits.
     try {model.calculate({volume:1,area:6,dims:[1,1,1]},info);}catch(error){message.textContent=error.message;return;} // Validate material/process/quantity settings before expensive geometry analysis.
     const scale=Number($('estimateUnits').value); // Apply declared STL units; STEP imports its own units.
@@ -59,6 +59,7 @@
       if(current!==revision)return; // Discard a result after requirements changed.
       const r=model.calculate(g,info); // Apply process-specific material, time, allowance and profit rules.
       $('estimatePrice').textContent=money(r.unit)+' / part'; // Display the customer selling estimate.
+      $('estimateOptions').textContent='Included quality allowances: tolerance '+money(r.toleranceExtraSAR)+' / batch; inspection '+money(r.inspectionExtraSAR)+' / batch. '+(r.inspectionOption==='standard'?'Standard checks.':r.inspectionOption+' report · '+(r.coverage==='all'?'every part':'first article only')+'.'); // Display selling-price components already included in the total.
       $('estimateTotal').textContent=money(r.total)+' for '+r.quantity+' parts'; // Show full batch amount.
       $('estimateMachine').textContent=r.route; // Report a process assumption rather than a verified machine-axis claim.
       $('estimateSetup').textContent=r.setup.toFixed(0)+' min / batch'; // Distinguish setup from per-part runtime.
@@ -67,7 +68,7 @@
       $('estimateCalibration').textContent='Uncalibrated budget estimate using illustrative rates—not a supplier quote or a slicer/CAM result.'; // Display the accuracy limitation with every price.
       $('estimateGeometry').textContent=g.dims.map(x=>x.toFixed(1)).join(' × ')+' mm · '+(g.volume/1000).toFixed(2)+' cm³'; // Let customers spot unit or scale mistakes.
       $('estimateDetails').textContent=r.grade+'. '+r.notes+(m.mode==='print'?' Approximate feedstock: '+r.printMass.toFixed(1)+' g.':''); // Explain the assumptions behind this result.
-      summary.value=JSON.stringify({status:'budget-estimate',version:'browser-3',material:r.grade,process:r.route,quantity:r.quantity,unitSAR:Math.round(r.unit),totalSAR:Math.round(r.total),setupMinutes:r.setup,cycleMinutes:r.cycle,notes:r.notes,notice:'Illustrative estimate only. Tax, delivery, urgency, special tolerances and additional requirements excluded.'}); // Attach only customer-facing fields to a later customer-submitted RFQ.
+      summary.value=JSON.stringify({status:'budget-estimate',version:'browser-4',tolerance:r.tolerance,inspection:r.inspectionOption,coverage:r.coverage,material:r.grade,process:r.route,quantity:r.quantity,unitSAR:Math.round(r.unit),totalSAR:Math.round(r.total),setupMinutes:r.setup,cycleMinutes:r.cycle,notes:r.notes,notice:'Illustrative estimate only. Tax, delivery, urgency and unmodelled additional requirements excluded.'}); // Attach only customer-facing fields to a later customer-submitted RFQ.
       output.hidden=false;message.textContent='Estimate ready. Request a confirmed quote below for final price and delivery.'; // Complete the customer flow.
     }catch(error){if(current===revision)message.textContent=error.message||'Unable to estimate this model. Please request a quote.';} // Show a useful failure reason.
     finally{if(current===revision){button.disabled=false;button.textContent='Calculate budget estimate';}} // Restore the calculate action for the current order.
