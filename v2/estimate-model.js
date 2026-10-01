@@ -34,6 +34,14 @@
   print('Engineering resin','engineering resin',1.15,450,'SLA',0.12,50,0.05); // Exact resin grade still needs supplier confirmation.
   print('High-temperature resin','high-temperature resin',1.15,650,'SLA',0.15,55,0.05); // Heat-resistant resin baseline.
   print('Flexible resin','flexible resin',1.10,450,'SLA',0.15,50,0.05); // Flexible resin baseline.
+  materials['Sheet aluminium 5052-H32']={mode:'sheet',grade:'Sheet aluminium 5052-H32'}; // Named RFQ-only sheet grade; no invented machining or sheet price.
+  materials['Sheet aluminium 6061-T6']={mode:'sheet',grade:'Sheet aluminium 6061-T6'}; // Named RFQ-only sheet grade; no invented machining or sheet price.
+  materials['Sheet steel DC01 — cold rolled']={mode:'sheet',grade:'Sheet steel DC01 — cold rolled'}; // Named RFQ-only sheet grade; no invented machining or sheet price.
+  materials['Sheet galvanized steel ASTM A653 CS Type B']={mode:'sheet',grade:'Sheet galvanized steel ASTM A653 CS Type B'}; // Named RFQ-only sheet grade; no invented machining or sheet price.
+  materials['Sheet stainless steel 304 — 2B']={mode:'sheet',grade:'Sheet stainless steel 304 — 2B'}; // Named RFQ-only sheet grade; no invented machining or sheet price.
+  materials['Sheet stainless steel 316L — 2B']={mode:'sheet',grade:'Sheet stainless steel 316L — 2B'}; // Named RFQ-only sheet grade; no invented machining or sheet price.
+  materials['Sheet copper C110']={mode:'sheet',grade:'Sheet copper C110'}; // Named RFQ-only sheet grade; no invented machining or sheet price.
+  materials['Sheet brass C260']={mode:'sheet',grade:'Sheet brass C260'}; // Named RFQ-only sheet grade; no invented machining or sheet price.
   function calculate(g, input) { // Price one measured part using explicit manufacturing settings.
     const m=materials[input.material]; // Resolve a specific material profile.
     if(!m) throw Error('Choose a specific material; an unknown material cannot be priced.'); // Handle Not sure / other explicitly.

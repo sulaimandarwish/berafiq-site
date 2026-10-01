@@ -128,3 +128,11 @@ Grade nomenclature references (not sources for the example SAR rates):
 https://www.xometry.com/capabilities/cnc-machining-service/
 https://xometry.com.tr/en/capabilities/
 https://www.protolabs.com/en-gb/services/cnc-machining/titanium/
+
+## Sheet-metal RFQs
+
+Eight named sheet grades are available: aluminium 5052-H32/6061-T6, cold-rolled DC01, galvanized ASTM A653 CS Type B, stainless 304/316L with 2B finish, copper C110 and brass C260. Material choices follow the selected process. Switching process clears incompatible materials. Sheet thickness is collected and sent in the RFQ; coating designation can be supplied in notes/drawing. Grade/thickness availability requires confirmation. Sheet metal remains review-only: there is no cutting, bending or nesting cost model.
+
+Urgent / Breakdown Part and Reverse Engineering / Replacement Part are removed from the V2 process dropdown. Other service descriptions are unchanged.
+
+Sheet grade references: https://www.xometry.com/capabilities/sheet-metal-fabrication/ and https://www.protolabs.com/resources/blog/recent-enhancements-expand-sheet-metal-capabilities/ .

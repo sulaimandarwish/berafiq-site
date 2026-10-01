@@ -11,7 +11,7 @@
   const money=value=>new Intl.NumberFormat('en-SA',{style:'currency',currency:'SAR',maximumFractionDigits:0}).format(value); // Avoid false decimal precision in a rough customer estimate.
   function requirements() { // Reflect the selected material's manufacturing assumptions before calculation.
     const m=model.materials[field('material')]; // Resolve the declared material option.
-    $('estimateProfile').textContent=m ? `Assumed grade: ${m.grade}. ${m.mode==='print'?'Technology: '+m.technology+'.':'CNC milling budget model.'} Example rates only; confirm the actual grade in your quote.` : 'Choose a specific material to see the estimation assumptions.'; // Make generic-to-specific material mappings visible.
+    $('estimateProfile').textContent=m ? `Assumed grade: ${m.grade}. ${m.mode==='print'?'Technology: '+m.technology+'.':m.mode==='sheet'?'Sheet metal · reviewed quote only.':'CNC milling budget model.'} Example rates only; confirm the actual grade in your quote.` : 'Choose a specific material to see the estimation assumptions.'; // Make generic-to-specific material mappings visible.
     $('printSettings').hidden=!(m?.mode==='print'); // Show additive options only for printing materials.
     $('infillSetting').hidden=m?.technology!=='FDM'; // Infill applies only to the extrusion model.
     $('supportSetting').hidden=m?.technology==='SLS'; // Powder model has its own fixed refresh allowance.
@@ -47,6 +47,7 @@
   button.addEventListener('click',async()=>{ // Calculate only on explicit customer action.
     reset(); const current=revision, files=[...input.files].filter(f=>/\.(step|stp|stl)$/i.test(f.name)), m=model.materials[field('material')]; // Capture the order being priced.
     const info={material:field('material'),process:field('process'),quantity:Number(field('quantity')),infill:Number($('estimateInfill').value),support:Number($('estimateSupport').value),tolerance:field('tolerance'),inspection:field('inspection'),coverage:field('inspection_coverage')}; // Capture all cost-driving requirements.
+    if(field('process')==='Sheet Metal & Fabrication'){message.textContent='Sheet metal needs a reviewed quote for cutting, bends, thickness and inspection. Complete stage 2 and send your RFQ below; no automatic sheet-metal total is available.';return;} // Keep sheet requests out of CNC and print price models.
     if(files.length!==1||!(/\.(step|stp|stl)$/i.test(files[0].name))){message.textContent='For an estimate, select one STEP/STP or closed STL model. PDF, images and other drawings can still be sent for a quote.';return;} // Require measurable 3D geometry.
     if(files[0].size>10*1024*1024){message.textContent='Use a model up to 10 MB for browser estimation.';return;} // Bound local processing effort.
     if(!m){message.textContent='Select a specific material. “Not sure / other” needs a confirmed quote.';return;} // Do not invent a price for unknown material.

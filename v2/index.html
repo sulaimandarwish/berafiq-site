@@ -95,7 +95,7 @@
           <div id="fileList" class="file-list"></div>
 
           <div class="form-grid">
-            <label><span>Process</span><select name="process" required><option value="">Select process</option><option>CNC Machining</option><option>3D Printing — Polymer / Resin</option><option>Sheet Metal & Fabrication</option><option>Reverse Engineering / Replacement Part</option><option>Urgent / Breakdown Part</option><option>Not sure / Other</option></select></label>
+            <label><span>Process</span><select name="process" required><option value="">Select process</option><option>CNC Machining</option><option>3D Printing — Polymer / Resin</option><option>Sheet Metal & Fabrication</option><option>Not sure / Other</option></select></label>
             <label><span>Material</span><select name="material" required>
               <option value="">Select material</option>
               <optgroup label="Machining metals">
@@ -113,6 +113,16 @@
                 <option>Tool steel P20 — pre-hardened</option>
                 <option>Titanium Grade 5 — Ti-6Al-4V</option>
                 <option>Nickel alloy Inconel 718</option>
+              </optgroup>
+              <optgroup label="Sheet metal grades">
+                <option>Sheet aluminium 5052-H32</option>
+                <option>Sheet aluminium 6061-T6</option>
+                <option>Sheet steel DC01 — cold rolled</option>
+                <option>Sheet galvanized steel ASTM A653 CS Type B</option>
+                <option>Sheet stainless steel 304 — 2B</option>
+                <option>Sheet stainless steel 316L — 2B</option>
+                <option>Sheet copper C110</option>
+                <option>Sheet brass C260</option>
               </optgroup>
               <optgroup label="3D printing — FDM / FFF">
                 <option>PLA</option>
@@ -143,6 +153,8 @@
               </optgroup>
             </select></label>
             <p class="wide option-help">Select the alloy and condition you require. Supplier availability and certification are confirmed with your quote. For an unlisted grade or a specific polymer/resin brand, choose “Not sure / other” and add the exact specification in stage 2 notes.</p>
+            <label class="wide" id="sheetThicknessField" hidden><span>Sheet thickness (mm)</span><select name="sheet_thickness" id="sheetThickness" disabled><option value="">Select thickness</option><option>0.5 mm</option><option>0.8 mm</option><option>1 mm</option><option>1.2 mm</option><option>1.5 mm</option><option>2 mm</option><option>2.5 mm</option><option>3 mm</option><option>4 mm</option><option>5 mm</option><option>6 mm</option><option>Other / as specified on drawing</option></select></label>
+            <p class="wide option-help" id="sheetNotice" hidden>Sheet metal is quoted after review of thickness, cutting, bends, finish and inspection. Thickness and grade availability are subject to supplier confirmation. For galvanized sheet, specify coating designation in your drawing or stage 2 notes. No automatic sheet-metal price is calculated.</p>
             <label><span>Quantity</span><input name="quantity" type="number" min="1" placeholder="e.g. 4" required></label>
             <label><span>Required by</span><select name="lead_time" required><option value="">Select timing</option><option>Within 1 week</option><option>Within 2 weeks</option><option>Flexible</option></select></label>
 
@@ -290,9 +302,9 @@
   <script src="app.js?v=4"></script>
   <script src="journey.js"></script>
   <script src="estimator-config.js?v=4"></script>
-  <script src="estimate-model.js?v=6"></script>
-  <script src="request-flow.js?v=4"></script>
-  <script src="estimator.js?v=4"></script>
+  <script src="estimate-model.js?v=7"></script>
+  <script src="request-flow.js?v=7"></script>
+  <script src="estimator.js?v=7"></script>
 </body>
 </html>
 
