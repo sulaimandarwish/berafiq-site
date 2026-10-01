@@ -27,3 +27,6 @@
 .option-help{font-size:12px;line-height:1.6;color:#aab0b6;margin:0}
 #stage2Title:focus{outline:2px solid var(--sand);outline-offset:5px}
 #estimateOptions{color:var(--sand);font-size:12px;line-height:1.6}
+
+/* Align both hero columns at the top, including the taller configuration stage. */
+.hero{align-items:start}
