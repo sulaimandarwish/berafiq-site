@@ -99,23 +99,31 @@
             <label><span>Material</span><select name="material" required>
               <option value="">Select material</option>
               <optgroup label="Machining metals">
-                <option>Aluminium</option>
-                <option>Carbon steel</option>
-                <option>Stainless steel</option>
-                <option>Tool steel</option>
-                <option>Titanium</option>
-                <option>Inconel / nickel alloy</option>
+                <option>Aluminium 6061-T6</option>
+                <option>Aluminium 7075-T6</option>
+                <option>Aluminium 6082-T6</option>
+
+                <option>Carbon steel AISI 1018</option>
+                <option>Carbon steel AISI 1045</option>
+                <option>Alloy steel AISI 4140 — annealed</option>
+
+                <option>Stainless steel AISI 304</option>
+                <option>Stainless steel AISI 316L</option>
+
+                <option>Tool steel P20 — pre-hardened</option>
+                <option>Titanium Grade 5 — Ti-6Al-4V</option>
+                <option>Nickel alloy Inconel 718</option>
               </optgroup>
               <optgroup label="3D printing — FDM / FFF">
                 <option>PLA</option>
                 <option>PETG</option>
                 <option>ABS</option>
                 <option>ASA</option>
-                <option>TPU / flexible</option>
+                <option>TPU 95A — filament</option>
                 <option>Polycarbonate (PC)</option>
-                <option>Nylon (PA)</option>
-                <option>Carbon-fibre reinforced nylon (PA-CF)</option>
-                <option>PEEK / high-temperature polymer</option>
+                <option>Nylon PA6 — filament</option>
+                <option>Nylon PA6-CF — filament</option>
+                <option>PEEK — filament</option>
               </optgroup>
               <optgroup label="3D printing — SLS / MJF">
                 <option>PA12 Nylon</option>
@@ -130,10 +138,11 @@
                 <option>Flexible resin</option>
               </optgroup>
               <optgroup label="Other">
-                <option>Engineering plastic</option>
+                <option>Acetal POM-C</option>
                 <option>Not sure / other</option>
               </optgroup>
             </select></label>
+            <p class="wide option-help">Select the alloy and condition you require. Supplier availability and certification are confirmed with your quote. For an unlisted grade or a specific polymer/resin brand, choose “Not sure / other” and add the exact specification in stage 2 notes.</p>
             <label><span>Quantity</span><input name="quantity" type="number" min="1" placeholder="e.g. 4" required></label>
             <label><span>Required by</span><select name="lead_time" required><option value="">Select timing</option><option>Within 1 week</option><option>Within 2 weeks</option><option>Flexible</option></select></label>
 
@@ -281,7 +290,7 @@
   <script src="app.js?v=4"></script>
   <script src="journey.js"></script>
   <script src="estimator-config.js?v=4"></script>
-  <script src="estimate-model.js?v=4"></script>
+  <script src="estimate-model.js?v=6"></script>
   <script src="request-flow.js?v=4"></script>
   <script src="estimator.js?v=4"></script>
 </body>

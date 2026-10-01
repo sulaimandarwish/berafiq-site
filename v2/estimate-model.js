@@ -4,23 +4,28 @@
   const pricing = {margin:0.20, allowance:0, machineSARHour:100, setupSARHour:100, programmingSARHour:80, inspectionSARHour:60}; // Public example business settings; browser code cannot keep margins secret.
   const materials = {}; // Index every specific material option by its exact form label.
   function cnc(name, grade, density, sarKg, mrr, feed) { materials[name]={mode:'cnc',grade,density,sarKg,mrr,feed}; } // Density is kg/litre; MRR is mm³/min; feed is mm/min.
-  cnc('Aluminium','6061 aluminium',2.70,25,6000,800); // Illustrative aluminium machining baseline.
-  cnc('Carbon steel','1018 carbon steel',7.85,12,2500,400); // Illustrative mild-steel baseline.
-  cnc('Stainless steel','304 stainless steel',8.00,30,1200,250); // Illustrative stainless baseline.
-  cnc('Tool steel','P20 pre-hardened tool steel',7.80,35,900,200); // Assumes machinable pre-hard stock, not hardened-tool grinding.
-  cnc('Titanium','Ti-6Al-4V titanium',4.43,180,450,140); // Illustrative titanium baseline.
-  cnc('Inconel / nickel alloy','Inconel 718',8.19,240,220,100); // Illustrative nickel-alloy baseline.
-  cnc('Engineering plastic','POM/acetal',1.41,35,8000,1000); // Generic plastic is explicitly mapped to this declared grade.
+  cnc('Aluminium 6061-T6','Aluminium 6061-T6',2.70,25,6000,800); // Illustrative aluminium machining baseline.
+  cnc('Carbon steel AISI 1018','1018 carbon steel',7.85,12,2500,400); // Illustrative mild-steel baseline.
+  cnc('Stainless steel AISI 304','304 stainless steel',8.00,30,1200,250); // Illustrative stainless baseline.
+  cnc('Tool steel P20 — pre-hardened','P20 pre-hardened tool steel',7.80,35,900,200); // Assumes machinable pre-hard stock, not hardened-tool grinding.
+  cnc('Titanium Grade 5 — Ti-6Al-4V','Ti-6Al-4V titanium',4.43,180,450,140); // Illustrative titanium baseline.
+  cnc('Nickel alloy Inconel 718','Inconel 718',8.19,240,220,100); // Illustrative nickel-alloy baseline.
+  cnc('Acetal POM-C','Acetal POM-C',1.41,35,8000,1000); // Generic plastic is explicitly mapped to this declared grade.
+  cnc('Aluminium 7075-T6','Aluminium 7075-T6',2.81,42,5000,700); // Separate illustrative high-strength aluminium stock and machining assumptions.
+  cnc('Aluminium 6082-T6','Aluminium 6082-T6',2.70,28,5800,780); // Separate illustrative 6082 stock profile; availability needs confirmation.
+  cnc('Carbon steel AISI 1045','AISI 1045 carbon steel',7.85,14,2100,350); // Assumes unhardened stock; heat treatment is excluded.
+  cnc('Alloy steel AISI 4140 — annealed','AISI 4140 alloy steel, annealed',7.85,22,1700,300); // Explicitly excludes hardened 4140 and additional heat treatment.
+  cnc('Stainless steel AISI 316L','AISI 316L stainless steel',8.00,38,1000,220); // Separate illustrative stock price and slower removal assumptions.
   function print(name, grade, density, sarKg, technology, flow, hourly, layer) { materials[name]={mode:'print',grade,density,sarKg,technology,flow,hourly,layer}; } // Add a polymer/resin process with explicit example throughput.
   print('PLA','PLA',1.24,80,'FDM',8,20,0.20); // FDM flow is effective extrusion in mm³/s.
   print('PETG','PETG',1.27,90,'FDM',7,20,0.20); // PETG flow and material price assumption.
   print('ABS','ABS',1.04,85,'FDM',7,24,0.20); // Enclosed-printer ABS assumption.
   print('ASA','ASA',1.07,110,'FDM',7,24,0.20); // Enclosed-printer ASA assumption.
-  print('TPU / flexible','TPU filament',1.21,150,'FDM',3,25,0.20); // Flexible filament uses lower effective flow.
+  print('TPU 95A — filament','TPU 95A filament',1.21,150,'FDM',3,25,0.20); // Flexible filament uses lower effective flow.
   print('Polycarbonate (PC)','PC',1.20,160,'FDM',5,30,0.20); // High-temperature PC printing assumption.
-  print('Nylon (PA)','PA filament',1.14,170,'FDM',5,30,0.20); // Dry-filament PA assumption.
-  print('Carbon-fibre reinforced nylon (PA-CF)','PA-CF filament',1.20,260,'FDM',4,35,0.20); // Abrasive filament and specialist printer allowance.
-  print('PEEK / high-temperature polymer','PEEK',1.30,1800,'FDM',2,90,0.20); // Requires a compatible high-temperature printer; no availability guarantee.
+  print('Nylon PA6 — filament','PA6 filament',1.14,170,'FDM',5,30,0.20); // Dry-filament PA assumption.
+  print('Nylon PA6-CF — filament','PA6-CF filament; fibre loading and brand subject to confirmation',1.20,260,'FDM',4,35,0.20); // Abrasive filament and specialist printer allowance.
+  print('PEEK — filament','PEEK',1.30,1800,'FDM',2,90,0.20); // Requires a compatible high-temperature printer; no availability guarantee.
   print('PA12 Nylon','PA12 powder',1.01,280,'SLS',2,90,0.10); // SLS flow is assumed fused volume in cm³/min, not filament flow.
   print('PA11 Nylon','PA11 powder',1.03,320,'SLS',2,90,0.10); // Representative SLS, not an automatic SLS/MJF supplier choice.
   print('TPU powder','TPU powder',1.10,450,'SLS',1.5,100,0.10); // Flexible powder baseline.
