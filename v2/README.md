@@ -110,3 +110,21 @@ Reference for option structure, not rates or capabilities:
 https://geomiq.com/quality-assurance/
 https://geomiq.com/cnc-machining/
 BeRafiq's rates, report scope and tolerance factors are independent assumptions.
+
+## Explicit material grades (October 2026)
+
+The dropdown and estimate keys now name the actual requested alloy/grade rather
+than silently mapping Aluminium, Steel, Titanium or Engineering plastic to one
+assumed grade. Aluminium choices are 6061-T6, 7075-T6 and 6082-T6; steels include
+AISI 1018, AISI 1045, annealed AISI 4140, stainless AISI 304/316L and pre-hardened
+P20. Titanium is Grade 5 (Ti-6Al-4V), nickel alloy is Inconel 718, and machined
+acetal is POM-C. Filament labels clarify PA6, PA6-CF, TPU 95A and PEEK.
+There are now 29 named estimate profiles. Each additional metal has its own
+illustrative stock price and machining assumptions, not verified market data.
+Manufacturer-specific resin/filament formulations, fibre loading, certificates,
+other heat-treatment conditions and unlisted grades require supplier confirmation.
+Use Not sure / other plus the exact specification in notes for a reviewed quote.
+Grade nomenclature references (not sources for the example SAR rates):
+https://www.xometry.com/capabilities/cnc-machining-service/
+https://xometry.com.tr/en/capabilities/
+https://www.protolabs.com/en-gb/services/cnc-machining/titanium/
