@@ -14,7 +14,7 @@ material and quantity. Select one STEP/STP or closed STL file up to 10 MB,
 confirm the assumptions and click Calculate budget estimate. For STL, choose
 its units; STEP carries units. FDM exposes infill and support allowances.
 All 24 specific dropdown materials have profiles. Not sure / other, other
-processes, specified tolerances and unsupported models need a reviewed quote.
+processes, custom tolerances/checks and unsupported models need a reviewed quote.
 The separate RFQ button sends a real request through the existing FormSubmit route.
 
 ## Read these files first
@@ -35,7 +35,7 @@ keeping commercial rates private requires a server implementation later.
 All prices are illustrative, unvalidated SAR inputs, not a Saudi supplier database.
 Generic materials map to visible assumed grades. Calibrate against actual
 supplier quotes, machine logs and invoices before relying on prices commercially.
-Tax, shipping, urgency, finishing and special requirements are excluded.
+Tax, shipping, urgency, finishing and unmodelled special requirements are excluded. Selected preset tolerance and inspection allowances are included.
 
 CNC uses an axis-aligned stock box plus allowance, material-dependent removal
 rates and an area-based finishing approximation. Setup is a fixed starting
@@ -78,3 +78,35 @@ because Chromium could not launch in the execution environment.
 Revert this V2 fix commit to restore the prior V2, or disable the estimator flag.
 Deleting only `v2/` removes V2 without changing V1. Do not merge the earlier draft
 PR #1 merely to enable estimation: it modifies root V1 files.
+
+## Two-stage configuration (October 2026)
+
+Request quote now advances from files/process/material/quantity/timing to a second
+stage containing tolerance, inspection, estimation and contact details. Only Send
+RFQ submits to FormSubmit. Back preserves values. `request-flow.js` controls this.
+
+CNC offers an assumed ±0.127 mm standard, ±0.05, ±0.025, ±0.01 and ±0.005 mm
+requested targets, plus custom review. These are linear tolerance requests, not
+verified manufacturability or GD&T compliance. Printing uses process-standard
+or custom review; CNC precision choices are unavailable for printing.
+
+Inspection choices: included standard checks (no report), dimensional report,
+CMM report or custom review. Report scope is up to 10 agreed dimensions, on one
+first article or every part. No ISO sampling plan or accreditation is claimed.
+Attach a dimensioned PDF to define critical features; the estimator can use one
+STEP/STL model alongside supporting files. Drawing requirements are not parsed.
+
+Editable illustrative machining-time multipliers in `estimate-model.js` are
+1 / 1.15 / 1.35 / 1.7 / 2.2 for standard through tightest CNC tolerance.
+Dimensional reports add 30 minutes per batch plus 10 minutes per inspected part
+at the inspection labour rate. CMM reports add 60 minutes plus 20 minutes per
+inspected part at SAR 180/hour. Existing basic checks remain included. Margin and
+contingency apply to these costs. The UI shows selling-price additions already
+included in the total; do not add them twice. Work hours include programming and
+extra inspection. After the first estimate, changing options refreshes the result
+using cached geometry. Custom options clear the old price and require review.
+
+Reference for option structure, not rates or capabilities:
+https://geomiq.com/quality-assurance/
+https://geomiq.com/cnc-machining/
+BeRafiq's rates, report scope and tolerance factors are independent assumptions.

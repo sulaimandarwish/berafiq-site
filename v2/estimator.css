@@ -20,3 +20,10 @@
 .estimate-availability{padding:10px;border-left:3px solid #a9d5bd;background:rgba(169,213,189,.08)}
 
 .estimate-print-settings{display:grid;gap:12px;margin:14px 0}.estimate-print-settings label,#stlSetting label{display:grid;gap:6px;font-size:13px}#estimateDetails,#estimateProfile,#estimateGeometry{font-size:12px;color:var(--muted);overflow-wrap:anywhere}.estimate-panel dd{overflow-wrap:anywhere}.estimate-panel dl{grid-template-columns:minmax(0,1fr) minmax(0,1.2fr)}
+/* Two-stage configuration uses the existing visual palette. */
+.request-stage{border:0;padding:0;margin:0;min-width:0}
+.request-stage[hidden]{display:none}
+.request-progress{color:var(--sand);font-size:12px;line-height:1.6;border-bottom:1px solid var(--line);padding-bottom:12px}
+.option-help{font-size:12px;line-height:1.6;color:#aab0b6;margin:0}
+#stage2Title:focus{outline:2px solid var(--sand);outline-offset:5px}
+#estimateOptions{color:var(--sand);font-size:12px;line-height:1.6}

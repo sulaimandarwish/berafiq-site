@@ -24,7 +24,7 @@
 
   txt(".quote-head small",C.quote.label); txt(".quote-head h2",C.quote.title); txt(".quote-head .secure",C.quote.secure);
   txt(".dropzone strong",C.quote.uploadTitle); txt(".dropzone > span",C.quote.uploadSubtitle); txt(".dropzone > small",C.quote.uploadFormats);
-  txt("#rfqForm .btn.full",C.quote.submitButton); txt(".form-note",C.quote.note);
+   txt(".form-note",C.quote.note);
 
   const roleStrip=document.querySelector(".role-strip");
   if(roleStrip&&Array.isArray(C.builtFor)){
@@ -63,17 +63,6 @@
   const fp=document.querySelector("footer > p");if(fp)fp.innerHTML='© <span id="year"></span> '+C.company.footerText;
 })();
 
-const tolRadios=document.querySelectorAll('input[name="tolerance_required"]');
-const tolDetails=document.getElementById("toleranceDetails");
-const tolInput=document.getElementById("toleranceValues");
-function updateToleranceUI(){
-  const required=[...tolRadios].find(r=>r.checked)?.value==="yes";
-  tolDetails.hidden=!required;
-  tolInput.required=required;
-  if(!required) tolInput.value="";
-}
-tolRadios.forEach(r=>r.addEventListener("change",updateToleranceUI));
-updateToleranceUI();
 const input=document.getElementById("fileInput");
 const list=document.getElementById("fileList");
 const drop=document.getElementById("dropzone");
@@ -144,6 +133,7 @@ input.addEventListener("change",e=>{
 drop.addEventListener("drop",e=>add(e.dataTransfer.files));
 
 form.addEventListener("submit",e=>{
+  if(e.defaultPrevented)return; // Respect stage navigation before sending the RFQ.
   if(!files.length){
     e.preventDefault();
     status.textContent="Please upload at least one CAD file or drawing.";

@@ -12,7 +12,7 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="journey.css">
-  <link rel="stylesheet" href="estimator.css?v=3">
+  <link rel="stylesheet" href="estimator.css?v=4">
 </head>
 <body>
   <aside class="version-banner" aria-label="Website version">
@@ -83,6 +83,8 @@
           <input type="hidden" name="_next" value="https://sulaimandarwish.github.io/berafiq-site/v2/thanks.html">
           <input type="hidden" name="_url" value="https://sulaimandarwish.github.io/berafiq-site/v2/">
           <input type="hidden" name="_autoresponse" value="Thank you for contacting BeRafiq. We have received your manufacturing request and will respond as soon as possible. Please reply to this email if you need to add any information.">
+          <p id="requestProgress" class="request-progress" role="status">1 · Files & requirements → 2 · Configure & send</p>
+          <fieldset id="requestStage1" class="request-stage">
           <label class="dropzone" id="dropzone">
             <input id="fileInput" name="attachment" type="file" multiple hidden required accept=".step,.stp,.stl,.iges,.igs,.dxf,.dwg,.pdf,.zip,.jpg,.jpeg,.png">
             <div class="upload-icon">↑</div>
@@ -135,26 +137,31 @@
             <label><span>Quantity</span><input name="quantity" type="number" min="1" placeholder="e.g. 4" required></label>
             <label><span>Required by</span><select name="lead_time" required><option value="">Select timing</option><option>Urgent — 24–72 hours</option><option>Within 1 week</option><option>Within 2 weeks</option><option>Flexible</option></select></label>
 
-            <div class="wide tolerance-block">
-              <span class="field-label">Tolerance required?</span>
-              <div class="toggle-options" role="group" aria-label="Tolerance required">
-                <label class="toggle-choice">
-                  <input type="radio" name="tolerance_required" value="no" checked>
-                  <span>No</span>
-                </label>
-                <label class="toggle-choice">
-                  <input type="radio" name="tolerance_required" value="yes">
-                  <span>Yes</span>
-                </label>
-              </div>
-            </div>
-
-            <label class="wide tolerance-details" id="toleranceDetails" hidden>
-              <span>Tolerance values</span>
-              <input name="tolerance_values" id="toleranceValues" placeholder="e.g. ±0.05 mm, H7, or see drawing">
-              <small>Enter the required tolerance or reference the uploaded drawing.</small>
-            </label>
-
+          </div>
+          <button class="btn full" id="requestNext" type="button">Request quote · configure options →</button>
+          </fieldset>
+          <fieldset id="requestStage2" class="request-stage" hidden disabled>
+          <h3 id="stage2Title" tabindex="-1">2 · Tolerances, checks & estimate</h3>
+          <button id="requestBack" class="btn ghost" type="button">← Back to files</button>
+          <div class="form-grid">
+            <label class="wide"><span>Dimensional tolerance</span><select name="tolerance" id="toleranceSelect">
+              <option value="standard">Standard — process-dependent</option>
+              <option value="0.05" data-cnc>Tighter CNC — ±0.05 mm</option>
+              <option value="0.025" data-cnc>Precision CNC — ±0.025 mm</option>
+              <option value="0.01" data-cnc>High precision CNC — ±0.01 mm</option>
+              <option value="0.005" data-cnc>Ultra precision CNC — ±0.005 mm</option>
+              <option value="custom">Custom / GD&T — review required</option>
+            </select></label>
+            <p class="wide option-help" id="toleranceHelp"></p>
+            <label class="wide"><span>Post-production inspection</span><select name="inspection" id="inspectionSelect">
+              <option value="standard">Standard checks — included</option>
+              <option value="formal">Dimensional inspection + report</option>
+              <option value="cmm">CMM inspection + report</option>
+              <option value="custom">Custom checks / NDT — review required</option>
+            </select></label>
+            <label class="wide" id="coverageLabel"><span>Report coverage</span><select name="inspection_coverage" id="inspectionCoverage"><option value="first">First article — 1 part per batch</option><option value="all">Every part — 100% inspection</option></select></label>
+            <p class="wide option-help" id="inspectionHelp"></p>
+            <p class="wide option-help">Tighter tolerances and reports add estimated machining or inspection costs. These are requests subject to supplier confirmation. Upload a dimensioned PDF with your model for precision or reported checks; custom requirements receive a reviewed quote.</p>
             <label><span>Name</span><input name="name" placeholder="Your name" required></label>
             <label><span>Company</span><input name="company" placeholder="Company name" required></label>
             <label class="wide"><span>Work email</span><input name="email" type="email" placeholder="name@company.com" required></label>
@@ -165,8 +172,8 @@
             <span class="estimate-label">OPTIONAL · BUDGET ESTIMATE</span>
             <h3 id="estimateTitle">Get an estimate before requesting a quote.</h3>
             <p class="estimate-availability">Estimation runs in your browser. No separate server is required. Rates are illustrative and need supplier confirmation.</p>
-            <p>Upload one STEP/STP or closed STL part. Choose CNC machining or polymer/resin 3D printing to estimate price and production work time. <strong>This is an estimate, not a confirmed quotation.</strong></p>
-            <label class="estimate-consent"><input type="checkbox" id="estimateAssumptions"><span>I accept the material grade and process assumptions shown here. This is an uncalibrated budget estimate, excluding tax, delivery, urgency, specified tolerances and additional drawing/notes requirements.</span></label>
+            <p>Upload one STEP/STP or closed STL part, optionally with PDF drawings. Choose CNC machining or polymer/resin 3D printing to estimate price and production work time. <strong>This is an estimate, not a confirmed quotation.</strong></p>
+            <label class="estimate-consent"><input type="checkbox" id="estimateAssumptions"><span>I accept the material grade and process assumptions shown here. This is an uncalibrated budget estimate, excluding tax, delivery, urgency and unmodelled drawing/notes requirements. Selected tolerance and inspection allowances are included.</span></label>
             <p id="estimateProfile"></p>
             <div id="stlSetting" hidden><label>STL units<select id="estimateUnits"><option value="1">Millimetres (mm)</option><option value="25.4">Inches</option><option value="10">Centimetres (cm)</option><option value="1000">Metres (m)</option></select></label><small>STL has no built-in units. Confirm your export units.</small></div>
             <div id="printSettings" hidden class="estimate-print-settings">
@@ -180,15 +187,16 @@
             <div id="estimateResult" class="estimate-result" hidden>
               <strong>BUDGET ESTIMATE · NOT A CONFIRMED QUOTE</strong>
               <span id="estimatePrice" class="estimate-price"></span>
-              <p id="estimateTotal"></p>
+              <p id="estimateTotal"></p><p id="estimateOptions"></p>
               <p id="estimateCalibration"></p><p id="estimateGeometry"></p><p id="estimateDetails"></p>
               <dl><dt>Process candidate</dt><dd id="estimateMachine"></dd><dt>Estimated setup</dt><dd id="estimateSetup"></dd><dt>Estimated machine / print cycle</dt><dd id="estimateCycle"></dd><dt>Estimated batch production</dt><dd id="estimateProduction"></dd></dl>
               <p><small>Machine access and setup counts are preliminary. Production hours are processing work, not a delivery date. Final price, specifications and delivery are confirmed in your manufacturing quote.</small></p>
             </div>
             <input type="hidden" id="estimateSummary" name="budget_estimate">
           </section>
-          <button class="btn full" type="submit">Request manufacturing quote →</button>
+          <button class="btn full" type="submit">Send RFQ for confirmed quote →</button>
           <p class="form-note">Your RFQ details and attached files are emailed to hello@berafiq.com. Maximum total attachment size: 10 MB.</p>
+          </fieldset>
           <div id="formStatus" class="status"></div>
         </form>
       </section>
@@ -270,11 +278,12 @@
   </div>
 
   <script src="content.js"></script>
-  <script src="app.js"></script>
+  <script src="app.js?v=4"></script>
   <script src="journey.js"></script>
-  <script src="estimator-config.js?v=3"></script>
-  <script src="estimate-model.js?v=3"></script>
-  <script src="estimator.js?v=3"></script>
+  <script src="estimator-config.js?v=4"></script>
+  <script src="estimate-model.js?v=4"></script>
+  <script src="request-flow.js?v=4"></script>
+  <script src="estimator.js?v=4"></script>
 </body>
 </html>
 

@@ -71,13 +71,23 @@
       route=m.technology+' 3D printing · orientation as uploaded'; // Report the actual assumed printing technology.
       notes=`${m.technology}: layer ${m.layer} mm; ${m.technology==='FDM'?'1.2 mm shell, '+(input.infill??20)+'% infill; ':''}${m.technology==='SLS'?'25% powder allowance':(input.support??20)+'% support/waste allowance'}. No slicing, nesting or support generation. Quantity assumes sequential parts, not shared build packing.`; // Expose the print-time assumptions.
     } // Finish process-specific calculations.
+    const tolerance=input.tolerance||'standard', inspectionOption=input.inspection||'standard', coverage=input.coverage||'first'; // Read optional customer quality selections.
+    const multipliers={'standard':1,'0.05':1.15,'0.025':1.35,'0.01':1.7,'0.005':2.2}; // Editable machining-time factors, not verified supplier prices or capability guarantees.
+    if(!(tolerance in multipliers)||!['standard','formal','cmm'].includes(inspectionOption))throw Error('Custom tolerances or inspection need a reviewed quote; no automatic total is available.'); // Avoid pricing undefined quality work.
+    if(m.mode!=='cnc'&&tolerance!=='standard')throw Error('Numeric CNC tolerances do not apply to 3D printing. Choose process standard or custom review.'); // Keep process requirements compatible.
+    if(!['first','all'].includes(coverage))throw Error('Choose a valid inspection coverage.'); // Prevent unrecognised sampling rules.
+    const machiningExtraMinutes=cycle*(multipliers[tolerance]-1); // Add precision work only to CNC machine time.
+    cycle+=machiningExtraMinutes; // Include precision work in displayed runtime.
+    const checkedParts=coverage==='all'?q:1; // Explicit first-article or every-part scope, not an implied ISO sampling plan.
+    const inspectionMinutes=inspectionOption==='formal'?30+10*checkedParts:inspectionOption==='cmm'?60+20*checkedParts:0; // Editable batch preparation and per-part report allowances.
+    const inspectionExtra=inspectionMinutes/60*(inspectionOption==='cmm'?180:pricing.inspectionSARHour); // CMM uses an illustrative SAR 180/hour rate; formal reports use inspection labour.
     const machineRate=m.mode==='cnc'?pricing.machineSARHour:m.hourly; // Apply the relevant machine cost per hour.
     const materialTotal=materialCost*q; // Purchase material for the full order.
     const setupCost=setup/60*pricing.setupSARHour+programming/60*pricing.programmingSARHour; // Amortise fixed preparation over the batch.
     const productionCost=q*(cycle/60*machineRate+inspection/60*pricing.inspectionSARHour+2); // Add machine occupancy, cleanup/inspection and consumables.
-    const base=materialTotal+setupCost+productionCost; // Sum costs before allowance and gross margin.
+    const base=materialTotal+setupCost+productionCost+inspectionExtra; // Sum costs before allowance and gross margin.
     const total=base*(1+pricing.allowance)/(1-pricing.margin); // Apply owner-controlled contingency and profit margin in that order.
-    return {unit:total/q,total,quantity:q,setup,programming,cycle,productionHours:(setup+q*(cycle+inspection))/60,route,grade:m.grade,notes,printMass,volumeCM:g.volume/1000,dims:g.dims,materialTotal,setupCost,productionCost,allowance:base*pricing.allowance,profit:total-base*(1+pricing.allowance)}; // Return detailed values; UI displays only customer-facing fields.
+    return {unit:total/q,total,quantity:q,setup,programming,cycle,productionHours:(setup+programming+q*(cycle+inspection)+inspectionMinutes)/60,tolerance,inspectionOption,coverage,toleranceExtraSAR:q*machiningExtraMinutes/60*machineRate*(1+pricing.allowance)/(1-pricing.margin),inspectionExtraSAR:inspectionExtra*(1+pricing.allowance)/(1-pricing.margin),route,grade:m.grade,notes,printMass,volumeCM:g.volume/1000,dims:g.dims,materialTotal,setupCost,productionCost,allowance:base*pricing.allowance,profit:total-base*(1+pricing.allowance)}; // Return detailed values; UI displays only customer-facing fields.
   } // End price calculation.
   root.BerafiqModel={materials,pricing,calculate}; // Make the model available to page code and tests.
   if(typeof module!=='undefined') module.exports=root.BerafiqModel; // Support dependency-free Node regression tests.
