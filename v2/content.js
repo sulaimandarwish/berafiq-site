@@ -74,14 +74,6 @@ window.BERAFIQ_CONTENT = {
       {
         title: "Sheet Metal & Fabrication",
         text: "Laser cutting, bending, forming and fabricated components routed according to material, thickness and drawing requirements."
-      },
-      {
-        title: "Reverse Engineering",
-        text: "Support for worn, obsolete or difficult-to-source components where an existing part needs to be measured, reproduced or locally replaced."
-      },
-      {
-        title: "Urgent & Replacement Parts",
-        text: "Priority sourcing for breakdowns, maintenance requirements and time-critical parts when the normal supplier cannot meet the required lead time."
       }
     ]
   },
