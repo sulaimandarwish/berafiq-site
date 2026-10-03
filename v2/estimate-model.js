@@ -6,7 +6,7 @@
     FDM:{setup:10,programming:5,cleanup:3,labour:60,order:10}, // Ordinary filament work uses modest batch preparation rather than CNC labour defaults.
     SLA:{setup:20,programming:10,cleanup:15,labour:60,order:25}, // Resin retains washing/curing cleanup and its own preparation labour rate.
     SLS:{setup:60,programming:10,cleanup:15,labour:80,order:25}, // Powder work retains build preparation and powder-handling labour.
-    highTemperature:{setup:20,programming:10,cleanup:5,labour:100,order:25} // Specialist PEEK work keeps a separate preparation budget.
+    highTemperature:{setup:20,programming:10,cleanup:5,labour:100,programmingRate:80,order:25} // Specialist PEEK work keeps a separate preparation budget.
   }; // These rates are owner assumptions, not sourced Saudi supplier quotations.
   const materials = {}; // Index every specific material option by its exact form label.
   function cnc(name, grade, density, sarKg, mrr, feed) { materials[name]={mode:'cnc',grade,density,sarKg,mrr,feed}; } // Density is kg/litre; MRR is mm³/min; feed is mm/min.
@@ -103,8 +103,8 @@
     const inspectionExtra=inspectionMinutes/60*(inspectionOption==='cmm'?180:pricing.inspectionSARHour); // CMM uses an illustrative SAR 180/hour rate; formal reports use inspection labour.
     const machineRate=m.mode==='cnc'?pricing.machineSARHour:m.hourly; // Apply the relevant machine cost per hour.
     const materialTotal=materialCost*q; // Purchase material for the full order.
-    const setupCost=setup/60*(prep?prep.labour:pricing.setupSARHour)+programming/60*(prep?prep.labour:pricing.programmingSARHour); // Amortise fixed preparation over the batch.
-    const productionCost=q*(cycle/60*machineRate+inspection/60*(prep?prep.labour:pricing.inspectionSARHour)+2); // Add machine occupancy, cleanup/inspection and consumables.
+    const setupCost=setup/60*(prep?prep.labour:pricing.setupSARHour)+programming/60*(prep?(prep.programmingRate||prep.labour):pricing.programmingSARHour); // Amortise fixed preparation over the batch.
+    const productionCost=q*(cycle/60*machineRate+inspection/60*pricing.inspectionSARHour+2); // Add machine occupancy, cleanup/inspection and consumables.
     const orderAllowance=m.mode==='cnc'?pricing.cncOrderAllowance:prep.order; // Provisional batch allowance for procurement, handling and unmodelled shop preparation; calibrate with quotes.
     const base=materialTotal+setupCost+productionCost+inspectionExtra+orderAllowance; // Sum costs before allowance and gross margin.
     const total=base*(1+pricing.allowance)/(1-pricing.margin); // Apply owner-controlled contingency and profit margin in that order.
