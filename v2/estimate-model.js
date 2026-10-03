@@ -2,6 +2,12 @@
 (function(root) { // Export the same calculation code to browsers, workers and Node tests.
   'use strict'; // Catch accidental undeclared variables.
   const pricing = {margin:0.20, allowance:0.40, rangeHeadroom:0.20, cncOrderAllowance:75, printOrderAllowance:25, machineSARHour:100, setupSARHour:100, programmingSARHour:80, inspectionSARHour:60}; // Public example business settings; browser code cannot keep margins secret.
+  const printPreparation={ // Editable service-specific preparation assumptions; provisional until matched to supplier quotes.
+    FDM:{setup:10,programming:5,cleanup:3,labour:60,order:10}, // Ordinary filament work uses modest batch preparation rather than CNC labour defaults.
+    SLA:{setup:20,programming:10,cleanup:15,labour:60,order:25}, // Resin retains washing/curing cleanup and its own preparation labour rate.
+    SLS:{setup:60,programming:10,cleanup:15,labour:80,order:25}, // Powder work retains build preparation and powder-handling labour.
+    highTemperature:{setup:20,programming:10,cleanup:5,labour:100,programmingRate:80,order:25} // Specialist PEEK work keeps a separate preparation budget.
+  }; // These rates are owner assumptions, not sourced Saudi supplier quotations.
   const materials = {}; // Index every specific material option by its exact form label.
   function cnc(name, grade, density, sarKg, mrr, feed) { materials[name]={mode:'cnc',grade,density,sarKg,mrr,feed}; } // Density is kg/litre; MRR is mm³/min; feed is mm/min.
   cnc('Aluminium 6061-T6','Aluminium 6061-T6',2.70,25,6000,800); // Illustrative aluminium machining baseline.
@@ -52,6 +58,7 @@
     if(!Number.isInteger(q)||q<1||q>10000) throw Error('Enter a whole-number quantity between 1 and 10,000.'); // Validate batch size.
     if(!Number.isFinite(g.volume)||g.volume<=0||!Number.isFinite(g.area)||g.area<=0||g.dims.length!==3||!g.dims.every(x=>Number.isFinite(x)&&x>0)) throw Error('The geometry measurements are invalid.'); // Reject impossible or corrupt mesh properties.
     if(Math.max(...g.dims)>1000) throw Error('The part exceeds the 1,000 mm estimate limit. Please confirm units or request a quote.'); // Catch oversized models and common STL scale errors.
+    const prep=m.mode==='print'?printPreparation[input.material==='PEEK — filament'?'highTemperature':m.technology]:null; // Select printing labour separately from CNC.
     let materialCost, cycle, setup, programming, inspection, route, notes, printMass=0; // Declare the output components used by both processes.
     if(m.mode==='cnc') { // Apply the volume/surface milling budget model.
       const stock=g.dims.map(x=>x+4).reduce((a,b)=>a*b,1); // Add 2 mm stock allowance on every side of the axis-aligned box.
@@ -80,7 +87,7 @@
       } // Finish the chosen additive process model.
       printMass=usedCM*m.density; // Density kg/litre is numerically equal to grams/cm³.
       materialCost=printMass/1000*m.sarKg; // Convert estimated feedstock mass to material cost.
-      setup=m.technology==='SLS'?60:20; programming=10; inspection=m.technology==='FDM'?5:15; // Separate batch preparation and per-part cleanup allowances.
+      setup=prep.setup; programming=prep.programming; inspection=prep.cleanup; // Separate batch preparation and per-part cleanup allowances.
       route=m.technology+' 3D printing · orientation as uploaded'; // Report the actual assumed printing technology.
       notes=`${m.technology}: layer ${m.layer} mm; ${m.technology==='FDM'?'1.2 mm shell, '+(input.infill??20)+'% infill; ':''}${m.technology==='SLS'?'25% powder allowance':(input.support??20)+'% support/waste allowance'}. No slicing, nesting or support generation. Quantity assumes sequential parts, not shared build packing.`; // Expose the print-time assumptions.
     } // Finish process-specific calculations.
@@ -96,14 +103,14 @@
     const inspectionExtra=inspectionMinutes/60*(inspectionOption==='cmm'?180:pricing.inspectionSARHour); // CMM uses an illustrative SAR 180/hour rate; formal reports use inspection labour.
     const machineRate=m.mode==='cnc'?pricing.machineSARHour:m.hourly; // Apply the relevant machine cost per hour.
     const materialTotal=materialCost*q; // Purchase material for the full order.
-    const setupCost=setup/60*pricing.setupSARHour+programming/60*pricing.programmingSARHour; // Amortise fixed preparation over the batch.
+    const setupCost=setup/60*(prep?prep.labour:pricing.setupSARHour)+programming/60*(prep?(prep.programmingRate||prep.labour):pricing.programmingSARHour); // Amortise fixed preparation over the batch.
     const productionCost=q*(cycle/60*machineRate+inspection/60*pricing.inspectionSARHour+2); // Add machine occupancy, cleanup/inspection and consumables.
-    const orderAllowance=m.mode==='cnc'?pricing.cncOrderAllowance:pricing.printOrderAllowance; // Provisional batch allowance for procurement, handling and unmodelled shop preparation; calibrate with quotes.
+    const orderAllowance=m.mode==='cnc'?pricing.cncOrderAllowance:prep.order; // Provisional batch allowance for procurement, handling and unmodelled shop preparation; calibrate with quotes.
     const base=materialTotal+setupCost+productionCost+inspectionExtra+orderAllowance; // Sum costs before allowance and gross margin.
     const total=base*(1+pricing.allowance)/(1-pricing.margin); // Apply owner-controlled contingency and profit margin in that order.
     const budgetLow=Math.ceil(total/10)*10, budgetHigh=Math.ceil(total*(1+pricing.rangeHeadroom)/10)*10; // Round both planning bounds upward to SAR 10; this is a policy range, not a statistical confidence interval.
     return {budgetLow,budgetHigh,planningTotal:budgetHigh,planningUnit:budgetHigh/q,orderAllowance,unit:total/q,total,quantity:q,setup,programming,cycle,productionHours:(setup+programming+q*(cycle+inspection)+inspectionMinutes)/60,tolerance,inspectionOption,coverage,toleranceExtraSAR:q*machiningExtraMinutes/60*machineRate*(1+pricing.allowance)/(1-pricing.margin),inspectionExtraSAR:inspectionExtra*(1+pricing.allowance)/(1-pricing.margin),route,grade:m.grade,notes,printMass,volumeCM:g.volume/1000,dims:g.dims,materialTotal,setupCost,productionCost,allowance:base*pricing.allowance,profit:total-base*(1+pricing.allowance)}; // Return detailed values; UI displays only customer-facing fields.
   } // End price calculation.
-  root.BerafiqModel={materials,pricing,calculate}; // Make the model available to page code and tests.
+  root.BerafiqModel={materials,pricing,printPreparation,calculate}; // Make the model available to page code and tests.
   if(typeof module!=='undefined') module.exports=root.BerafiqModel; // Support dependency-free Node regression tests.
 })(typeof self!=='undefined'?self:globalThis); // Select the browser/worker global or Node global.
