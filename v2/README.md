@@ -156,3 +156,25 @@ tolerances, inspection, tax/shipping scope and your selling margin. Record predi
 budget versus actual comparable selling price separately for CNC/FDM/SLA/SLS.
 Adjust rates and allowances from that evidence; validate on later held-out quotes
 before claiming any probability that final quotes fall below the planning budget.
+
+## Printing preparation correction
+
+Printing no longer shares CNC setup/programming labour defaults. `printPreparation`
+holds separate FDM, SLA, SLS and high-temperature PEEK preparation budgets. FDM
+uses 10 min setup, 5 min programming, 3 min cleanup per part, SAR 60/hour labour
+and SAR 10/order handling. Resin keeps wash/cure cleanup; powder and PEEK retain
+higher preparation budgets. CNC pricing and all conservative percentage buffers
+are unchanged. Print order allowances now live in `printPreparation`, superseding
+the older shared `pricing.printOrderAllowance` value.
+
+This fixes excessive fixed charges on small filament jobs, but is not supplier
+calibration. No public market median or per-gram listing is treated as a universal
+rate. Reference: Prusa separates material, machine and preparation/postprocessing
+costs (https://blog.prusa3d.com/3d-printing-price-calculator_38905/). Saudi provider
+examples likewise separate service charges; they do not supply matched quotes
+for our test geometry (https://nolumi.store/3d-quote).
+
+For reliable prices, compare actual same-file supplier quotes or slicer output
+against these estimates. The current browser model does not generate toolpaths,
+resin support layouts or powder build packing. Customer output remains a simple
+budget range without calculation details or times.
