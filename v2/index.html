@@ -182,7 +182,7 @@
             </select></label>
             <label class="wide" id="coverageLabel"><span>Report coverage</span><select name="inspection_coverage" id="inspectionCoverage"><option value="first">First article — 1 part per batch</option><option value="all">Every part — 100% inspection</option></select></label>
             <p class="wide option-help" id="inspectionHelp"></p>
-            <p class="wide option-help">Tighter tolerances and reports add estimated machining or inspection costs. These are requests subject to supplier confirmation. Upload a dimensioned PDF with your model for precision or reported checks; custom requirements receive a reviewed quote.</p>
+            <p class="wide option-help">These are requests subject to supplier confirmation. Upload a dimensioned PDF with your model for precision or reported checks; custom requirements receive a reviewed quote.</p>
             <label><span>Name</span><input name="name" placeholder="Your name" required></label>
             <label><span>Company</span><input name="company" placeholder="Company name" required></label>
             <label class="wide"><span>Work email</span><input name="email" type="email" placeholder="name@company.com" required></label>
@@ -192,26 +192,25 @@
           <section id="estimatePanel" class="estimate-panel" hidden aria-labelledby="estimateTitle">
             <span class="estimate-label">OPTIONAL · BUDGET ESTIMATE</span>
             <h3 id="estimateTitle">Plan your budget before requesting a quote.</h3>
-            <p class="estimate-availability">Estimation runs in your browser. No separate server is required. The planning range includes an uncertainty allowance. Budget toward its upper end; final pricing requires supplier confirmation.</p>
-            <p>Upload one STEP/STP or closed STL part, optionally with PDF drawings. Choose CNC machining or polymer/resin 3D printing to estimate price and production work time. <strong>This is an estimate, not a confirmed quotation.</strong></p>
-            <label class="estimate-consent"><input type="checkbox" id="estimateAssumptions"><span>I accept the material grade and process assumptions shown here. This is an uncalibrated planning range, not a guaranteed maximum. Final pricing may fall outside the range, excluding tax, delivery, urgency and unmodelled drawing/notes requirements. Selected tolerance and inspection allowances are included.</span></label>
+            <p class="estimate-availability">Receive a budget range for your selected requirements.</p>
+            <p>Upload one STEP/STP or closed STL part, optionally with PDF drawings. Choose CNC machining or polymer/resin 3D printing to receive a price estimate. <strong>This is an estimate, not a confirmed quotation.</strong></p>
+            <label class="estimate-consent"><input type="checkbox" id="estimateAssumptions"><span>I understand this is an estimate, not a confirmed quote or guaranteed maximum. Final pricing may fall outside the range. Tax and delivery are additional.</span></label>
             <p id="estimateProfile"></p>
             <div id="stlSetting" hidden><label>STL units<select id="estimateUnits"><option value="1">Millimetres (mm)</option><option value="25.4">Inches</option><option value="10">Centimetres (cm)</option><option value="1000">Metres (m)</option></select></label><small>STL has no built-in units. Confirm your export units.</small></div>
             <div id="printSettings" hidden class="estimate-print-settings">
               <label id="infillSetting">FDM infill (%)<input id="estimateInfill" type="number" min="0" max="100" value="20"></label>
-              <label id="supportSetting">Support / waste allowance (%)<input id="estimateSupport" type="number" min="0" max="100" value="20"></label>
-              <small>Printing time is a model, not a slicer result. Orientation follows the uploaded file. Powder profiles use representative SLS assumptions.</small>
+              <input id="estimateSupport" type="hidden" value="20">
             </div>
-            <p><small>Your model stays in your browser during estimation. The STEP reader downloads from a third-party CDN. Submitting the RFQ below still emails the selected files.</small></p>
+            <p><small>Your model stays in your browser during estimation. Submitting the RFQ below still emails the selected files.</small></p>
             <button id="estimateButton" class="btn ghost" type="button">Calculate budget estimate</button>
             <p id="estimateMessage" class="estimate-message" role="status" aria-live="polite"></p>
             <div id="estimateResult" class="estimate-result" hidden>
               <strong>CONSERVATIVE PLANNING BUDGET · NOT A CONFIRMED QUOTE</strong>
               <span id="estimatePrice" class="estimate-price"></span>
               <p id="estimateTotal"></p><p id="estimateOptions"></p>
-              <p id="estimateCalibration"></p><p id="estimateGeometry"></p><p id="estimateDetails"></p>
-              <dl><dt>Process candidate</dt><dd id="estimateMachine"></dd><dt>Estimated setup</dt><dd id="estimateSetup"></dd><dt>Estimated machine / print cycle</dt><dd id="estimateCycle"></dd><dt>Estimated batch production</dt><dd id="estimateProduction"></dd></dl>
-              <p><small>Machine access and setup counts are preliminary. Production hours are processing work, not a delivery date. Final price, specifications and delivery are confirmed in your manufacturing quote.</small></p>
+              <p id="estimateCalibration"></p><p id="estimateGeometry"></p>
+              
+              <p><small>Final price, specifications and delivery are confirmed in your manufacturing quote.</small></p>
             </div>
             <input type="hidden" id="estimateSummary" name="budget_estimate">
           </section>
@@ -302,8 +301,8 @@
   <script src="journey.js"></script>
   <script src="estimator-config.js?v=4"></script>
   <script src="estimate-model.js?v=9"></script>
-  <script src="request-flow.js?v=7"></script>
-  <script src="estimator.js?v=9"></script>
+  <script src="request-flow.js?v=10"></script>
+  <script src="estimator.js?v=10"></script>
 </body>
 </html>
 
