@@ -1,7 +1,7 @@
 /* Editable browser budget model. All rates are illustrative, NOT verified Saudi market prices. */
 (function(root) { // Export the same calculation code to browsers, workers and Node tests.
   'use strict'; // Catch accidental undeclared variables.
-  const pricing = {margin:0.20, allowance:0, machineSARHour:100, setupSARHour:100, programmingSARHour:80, inspectionSARHour:60}; // Public example business settings; browser code cannot keep margins secret.
+  const pricing = {margin:0.20, allowance:0.40, rangeHeadroom:0.20, cncOrderAllowance:75, printOrderAllowance:25, machineSARHour:100, setupSARHour:100, programmingSARHour:80, inspectionSARHour:60}; // Public example business settings; browser code cannot keep margins secret.
   const materials = {}; // Index every specific material option by its exact form label.
   function cnc(name, grade, density, sarKg, mrr, feed) { materials[name]={mode:'cnc',grade,density,sarKg,mrr,feed}; } // Density is kg/litre; MRR is mm³/min; feed is mm/min.
   cnc('Aluminium 6061-T6','Aluminium 6061-T6',2.70,25,6000,800); // Illustrative aluminium machining baseline.
@@ -98,9 +98,11 @@
     const materialTotal=materialCost*q; // Purchase material for the full order.
     const setupCost=setup/60*pricing.setupSARHour+programming/60*pricing.programmingSARHour; // Amortise fixed preparation over the batch.
     const productionCost=q*(cycle/60*machineRate+inspection/60*pricing.inspectionSARHour+2); // Add machine occupancy, cleanup/inspection and consumables.
-    const base=materialTotal+setupCost+productionCost+inspectionExtra; // Sum costs before allowance and gross margin.
+    const orderAllowance=m.mode==='cnc'?pricing.cncOrderAllowance:pricing.printOrderAllowance; // Provisional batch allowance for procurement, handling and unmodelled shop preparation; calibrate with quotes.
+    const base=materialTotal+setupCost+productionCost+inspectionExtra+orderAllowance; // Sum costs before allowance and gross margin.
     const total=base*(1+pricing.allowance)/(1-pricing.margin); // Apply owner-controlled contingency and profit margin in that order.
-    return {unit:total/q,total,quantity:q,setup,programming,cycle,productionHours:(setup+programming+q*(cycle+inspection)+inspectionMinutes)/60,tolerance,inspectionOption,coverage,toleranceExtraSAR:q*machiningExtraMinutes/60*machineRate*(1+pricing.allowance)/(1-pricing.margin),inspectionExtraSAR:inspectionExtra*(1+pricing.allowance)/(1-pricing.margin),route,grade:m.grade,notes,printMass,volumeCM:g.volume/1000,dims:g.dims,materialTotal,setupCost,productionCost,allowance:base*pricing.allowance,profit:total-base*(1+pricing.allowance)}; // Return detailed values; UI displays only customer-facing fields.
+    const budgetLow=Math.ceil(total/10)*10, budgetHigh=Math.ceil(total*(1+pricing.rangeHeadroom)/10)*10; // Round both planning bounds upward to SAR 10; this is a policy range, not a statistical confidence interval.
+    return {budgetLow,budgetHigh,planningTotal:budgetHigh,planningUnit:budgetHigh/q,orderAllowance,unit:total/q,total,quantity:q,setup,programming,cycle,productionHours:(setup+programming+q*(cycle+inspection)+inspectionMinutes)/60,tolerance,inspectionOption,coverage,toleranceExtraSAR:q*machiningExtraMinutes/60*machineRate*(1+pricing.allowance)/(1-pricing.margin),inspectionExtraSAR:inspectionExtra*(1+pricing.allowance)/(1-pricing.margin),route,grade:m.grade,notes,printMass,volumeCM:g.volume/1000,dims:g.dims,materialTotal,setupCost,productionCost,allowance:base*pricing.allowance,profit:total-base*(1+pricing.allowance)}; // Return detailed values; UI displays only customer-facing fields.
   } // End price calculation.
   root.BerafiqModel={materials,pricing,calculate}; // Make the model available to page code and tests.
   if(typeof module!=='undefined') module.exports=root.BerafiqModel; // Support dependency-free Node regression tests.

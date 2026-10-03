@@ -191,10 +191,10 @@
           <!-- Optional estimate: ordinary RFQ submission stays available independently. -->
           <section id="estimatePanel" class="estimate-panel" hidden aria-labelledby="estimateTitle">
             <span class="estimate-label">OPTIONAL · BUDGET ESTIMATE</span>
-            <h3 id="estimateTitle">Get an estimate before requesting a quote.</h3>
-            <p class="estimate-availability">Estimation runs in your browser. No separate server is required. Rates are illustrative and need supplier confirmation.</p>
+            <h3 id="estimateTitle">Plan your budget before requesting a quote.</h3>
+            <p class="estimate-availability">Estimation runs in your browser. No separate server is required. The planning range includes an uncertainty allowance. Budget toward its upper end; final pricing requires supplier confirmation.</p>
             <p>Upload one STEP/STP or closed STL part, optionally with PDF drawings. Choose CNC machining or polymer/resin 3D printing to estimate price and production work time. <strong>This is an estimate, not a confirmed quotation.</strong></p>
-            <label class="estimate-consent"><input type="checkbox" id="estimateAssumptions"><span>I accept the material grade and process assumptions shown here. This is an uncalibrated budget estimate, excluding tax, delivery, urgency and unmodelled drawing/notes requirements. Selected tolerance and inspection allowances are included.</span></label>
+            <label class="estimate-consent"><input type="checkbox" id="estimateAssumptions"><span>I accept the material grade and process assumptions shown here. This is an uncalibrated planning range, not a guaranteed maximum. Final pricing may fall outside the range, excluding tax, delivery, urgency and unmodelled drawing/notes requirements. Selected tolerance and inspection allowances are included.</span></label>
             <p id="estimateProfile"></p>
             <div id="stlSetting" hidden><label>STL units<select id="estimateUnits"><option value="1">Millimetres (mm)</option><option value="25.4">Inches</option><option value="10">Centimetres (cm)</option><option value="1000">Metres (m)</option></select></label><small>STL has no built-in units. Confirm your export units.</small></div>
             <div id="printSettings" hidden class="estimate-print-settings">
@@ -206,7 +206,7 @@
             <button id="estimateButton" class="btn ghost" type="button">Calculate budget estimate</button>
             <p id="estimateMessage" class="estimate-message" role="status" aria-live="polite"></p>
             <div id="estimateResult" class="estimate-result" hidden>
-              <strong>BUDGET ESTIMATE · NOT A CONFIRMED QUOTE</strong>
+              <strong>CONSERVATIVE PLANNING BUDGET · NOT A CONFIRMED QUOTE</strong>
               <span id="estimatePrice" class="estimate-price"></span>
               <p id="estimateTotal"></p><p id="estimateOptions"></p>
               <p id="estimateCalibration"></p><p id="estimateGeometry"></p><p id="estimateDetails"></p>
@@ -301,9 +301,9 @@
   <script src="app.js?v=4"></script>
   <script src="journey.js"></script>
   <script src="estimator-config.js?v=4"></script>
-  <script src="estimate-model.js?v=7"></script>
+  <script src="estimate-model.js?v=9"></script>
   <script src="request-flow.js?v=7"></script>
-  <script src="estimator.js?v=7"></script>
+  <script src="estimator.js?v=9"></script>
 </body>
 </html>
 

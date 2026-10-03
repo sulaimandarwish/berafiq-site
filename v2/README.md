@@ -26,7 +26,7 @@ The separate RFQ button sends a real request through the existing FormSubmit rou
 - `estimator-config.js`: set enabled to false to disable the panel.
 
 New calculation code includes explanatory line comments. The default gross
-profit margin is 20% and overestimation allowance is 0%. Selling price is
+profit margin is 20% and overestimation allowance is 40%. Selling price is
 `base cost × (1 + allowance) / (1 - margin)`. These settings are public JavaScript;
 keeping commercial rates private requires a server implementation later.
 
@@ -136,3 +136,23 @@ Eight named sheet grades are available: aluminium 5052-H32/6061-T6, cold-rolled 
 Urgent / Breakdown Part and Reverse Engineering / Replacement Part are removed from the V2 process dropdown. Other service descriptions are unchanged.
 
 Sheet grade references: https://www.xometry.com/capabilities/sheet-metal-fabrication/ and https://www.protolabs.com/resources/blog/recent-enhancements-expand-sheet-metal-capabilities/ .
+
+## Conservative customer budgets (October 3, 2026)
+
+The customer headline now uses the upper planning amount, with a secondary batch
+range. Editable `pricing` defaults: 40% uncertainty allowance before the existing
+20% gross margin; a further 20% upper-range headroom; SAR 75 CNC or SAR 25 print
+batch preparation/procurement allowance added to modelled costs. Both batch bounds
+round upward to SAR 10. Unit display rounds upward to a whole SAR, so multiplying
+that approximate unit display may slightly exceed the authoritative batch total.
+Quality additions are shown before range headroom and are already included.
+These are provisional business policy settings, not measured Saudi rates or a
+confidence interval. Geometry-only pricing still lacks verified toolpaths,
+workholding, scrap, nesting and actual supplier charges. The range is not a ceiling.
+Tax, delivery and unmodelled drawing requirements remain explicitly excluded.
+
+Calibrate using comparable supplier quotations with the same quantity, grade,
+tolerances, inspection, tax/shipping scope and your selling margin. Record predicted
+budget versus actual comparable selling price separately for CNC/FDM/SLA/SLS.
+Adjust rates and allowances from that evidence; validate on later held-out quotes
+before claiming any probability that final quotes fall below the planning budget.
