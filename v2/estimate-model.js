@@ -49,6 +49,7 @@
   materials['Sheet copper C110']={mode:'sheet',grade:'Sheet copper C110'}; // Named RFQ-only sheet grade; no invented machining or sheet price.
   materials['Sheet brass C260']={mode:'sheet',grade:'Sheet brass C260'}; // Named RFQ-only sheet grade; no invented machining or sheet price.
   function calculate(g, input) { // Price one measured part using explicit manufacturing settings.
+    const trace=[];const step=(label,formula,value,unit)=>trace.push({label,formula,value,unit}); // Record the actual calculation for the separate review page.
     const m=materials[input.material]; // Resolve a specific material profile.
     if(!m) throw Error('Choose a specific material; an unknown material cannot be priced.'); // Handle Not sure / other explicitly.
     const isPrint=input.process==='3D Printing — Polymer / Resin'; // Use the exact existing printing process option.
@@ -58,12 +59,18 @@
     if(!Number.isInteger(q)||q<1||q>10000) throw Error('Enter a whole-number quantity between 1 and 10,000.'); // Validate batch size.
     if(!Number.isFinite(g.volume)||g.volume<=0||!Number.isFinite(g.area)||g.area<=0||g.dims.length!==3||!g.dims.every(x=>Number.isFinite(x)&&x>0)) throw Error('The geometry measurements are invalid.'); // Reject impossible or corrupt mesh properties.
     if(Math.max(...g.dims)>1000) throw Error('The part exceeds the 1,000 mm estimate limit. Please confirm units or request a quote.'); // Catch oversized models and common STL scale errors.
+    step('Part volume','Measured closed mesh volume',g.volume,'mm³');step('Part surface area','Measured triangle surface area',g.area,'mm²');step('Dimensions','Axis-aligned bounding box',g.dims.join(' × '),'mm'); // Record geometry inputs.
+    step('Quantity','Requested batch size',q,'parts');step('Density','Material profile',m.density,'g/cm³ = kg/L');step('Material rate','Illustrative material profile',m.sarKg,'SAR/kg'); // Record rates and batch inputs.
     const prep=m.mode==='print'?printPreparation[input.material==='PEEK — filament'?'highTemperature':m.technology]:null; // Select printing labour separately from CNC.
     let materialCost, cycle, setup, programming, inspection, route, notes, printMass=0; // Declare the output components used by both processes.
     if(m.mode==='cnc') { // Apply the volume/surface milling budget model.
       const stock=g.dims.map(x=>x+4).reduce((a,b)=>a*b,1); // Add 2 mm stock allowance on every side of the axis-aligned box.
+      step('Stock volume','('+g.dims.map(x=>x+' + 4').join(') × (')+')',stock,'mm³'); // Show the blank including 2 mm allowance on each face.
+      step('Stock mass',stock+' / 1,000,000 × '+m.density,stock/1e6*m.density,'kg/part'); // Record purchased stock rather than net part mass.
       materialCost=stock/1e6*m.density*m.sarKg+5; // Buy the raw blank, including removed material and SAR 5 cutting allowance.
       cycle=Math.max(0,stock-g.volume)/m.mrr+g.area*0.5/1/m.feed+4; // Approximate roughing, finishing and handling/tool-change time.
+      step('Material per part',stock+' / 1,000,000 × '+m.density+' × '+m.sarKg+' + 5 cutting allowance',materialCost,'SAR/part'); // Show CNC material formula.
+      step('Base cycle','max(0, '+stock+' − '+g.volume+') / '+m.mrr+' + '+g.area+' × 0.5 / 1 / '+m.feed+' + 4',cycle,'min/part'); // Show roughing, area-based finishing and handling.
       setup=60; programming=30; inspection=1; // Assume two 30-minute batch setups and separate programming/inspection.
       route='Milling budget model · machine axes need confirmation'; // Mesh geometry does not prove 3-axis, turning or 5-axis suitability.
       notes='Assumes two setups, 2 mm stock allowance per side and ordinary as-machined finish. No toolpath, fixture or axis-access verification; not a turning quote.'; // State the CNC model limits.
@@ -76,17 +83,26 @@
         const infill=Number(input.infill??20)/100; // Read requested infill fraction.
         if(!Number.isFinite(infill)||infill<0||infill>1) throw Error('Infill must be 0–100%.'); // Reject invalid percentages.
         const shell=Math.min(volumeCM,g.area*1.2/1000); // Approximate a 1.2 mm shell; cap it at the solid volume.
+        step('Shell volume','min('+volumeCM+', '+g.area+' × 1.2 / 1,000)',shell,'cm³'); // Show the thin-shell approximation.
+        step('Infill fraction','Requested infill / 100',infill,'fraction'); // Show actual selected infill.
         usedCM=(shell+(volumeCM-shell)*infill)*(1+support); // Add infill and the explicit support/waste allowance.
-        cycle=usedCM*1000/m.flow/60*1.4; // Convert deposited volume to minutes with a motion/retraction factor.
+        step('Feedstock volume','('+shell+' + ('+volumeCM+' − '+shell+') × '+infill+') × (1 + '+support+')',usedCM,'cm³/part'); // Include the support/waste assumption.
+        cycle=usedCM*1000/m.flow/60*1.4;
+        step('Base cycle',usedCM+' × 1,000 / '+m.flow+' / 60 × 1.4 motion factor',cycle,'min/part'); // Record FDM estimated extrusion runtime. // Convert deposited volume to minutes with a motion/retraction factor.
       } else if(m.technology==='SLA') { // Use a layer-based resin printing estimate.
         usedCM=volumeCM*(1+support); // Assume a solid resin part plus supports/waste.
-        cycle=Math.ceil(g.dims[2]/m.layer)*m.flow; // Estimate exposure/lift cycles using the file's Z orientation.
+        step('Feedstock volume',volumeCM+' × (1 + '+support+')',usedCM,'cm³/part'); // Record resin plus support allowance.
+        cycle=Math.ceil(g.dims[2]/m.layer)*m.flow;
+        step('Layer count','ceil('+g.dims[2]+' / '+m.layer+')',Math.ceil(g.dims[2]/m.layer),'layers');step('Base cycle',Math.ceil(g.dims[2]/m.layer)+' layers × '+m.flow+' minutes/layer',cycle,'min/part'); // Record resin height-based model. // Estimate exposure/lift cycles using the file's Z orientation.
       } else { // Use a rough powder-process model.
         usedCM=volumeCM*1.25; // Charge fused volume plus 25% powder handling/refresh allowance.
-        cycle=Math.ceil(g.dims[2]/m.layer)*0.08+volumeCM/m.flow; // Add layer spreading and approximate scan time.
+        step('Feedstock volume',volumeCM+' × 1.25 powder allowance',usedCM,'cm³/part'); // Record powder handling allowance.
+        cycle=Math.ceil(g.dims[2]/m.layer)*0.08+volumeCM/m.flow;
+        step('Base cycle','ceil('+g.dims[2]+' / '+m.layer+') × 0.08 + '+volumeCM+' / '+m.flow,cycle,'min/part'); // Show spreading and scan approximation. // Add layer spreading and approximate scan time.
       } // Finish the chosen additive process model.
       printMass=usedCM*m.density; // Density kg/litre is numerically equal to grams/cm³.
       materialCost=printMass/1000*m.sarKg; // Convert estimated feedstock mass to material cost.
+      step('Feedstock mass',usedCM+' × '+m.density,printMass,'g/part');step('Material per part',printMass+' / 1,000 × '+m.sarKg,materialCost,'SAR/part'); // Connect volume, mass and material cost.
       setup=prep.setup; programming=prep.programming; inspection=prep.cleanup; // Separate batch preparation and per-part cleanup allowances.
       route=m.technology+' 3D printing · orientation as uploaded'; // Report the actual assumed printing technology.
       notes=`${m.technology}: layer ${m.layer} mm; ${m.technology==='FDM'?'1.2 mm shell, '+(input.infill??20)+'% infill; ':''}${m.technology==='SLS'?'25% powder allowance':(input.support??20)+'% support/waste allowance'}. No slicing, nesting or support generation. Quantity assumes sequential parts, not shared build packing.`; // Expose the print-time assumptions.
@@ -97,11 +113,15 @@
     if(m.mode!=='cnc'&&tolerance!=='standard')throw Error('Numeric CNC tolerances do not apply to 3D printing. Choose process standard or custom review.'); // Keep process requirements compatible.
     if(!['first','all'].includes(coverage))throw Error('Choose a valid inspection coverage.'); // Prevent unrecognised sampling rules.
     const machiningExtraMinutes=cycle*(multipliers[tolerance]-1); // Add precision work only to CNC machine time.
+    step('Tolerance multiplier','Selected tolerance: '+tolerance,multipliers[tolerance],'×');step('Precision extra time',cycle+' × ('+multipliers[tolerance]+' − 1)',machiningExtraMinutes,'min/part'); // Record tolerance effect before adjusting cycle.
     cycle+=machiningExtraMinutes; // Include precision work in displayed runtime.
     const checkedParts=coverage==='all'?q:1; // Explicit first-article or every-part scope, not an implied ISO sampling plan.
     const inspectionMinutes=inspectionOption==='formal'?30+10*checkedParts:inspectionOption==='cmm'?60+20*checkedParts:0; // Editable batch preparation and per-part report allowances.
     const inspectionExtra=inspectionMinutes/60*(inspectionOption==='cmm'?180:pricing.inspectionSARHour); // CMM uses an illustrative SAR 180/hour rate; formal reports use inspection labour.
     const machineRate=m.mode==='cnc'?pricing.machineSARHour:m.hourly; // Apply the relevant machine cost per hour.
+    step('Cycle including tolerance','Base cycle + precision extra time',cycle,'min/part');step('Machine rate','Selected process profile',machineRate,'SAR/hour'); // Show process occupancy assumptions.
+    step('Setup time','Fixed batch preparation assumption',setup,'min/batch');step('Programming time','Fixed batch programming assumption',programming,'min/batch');step('Basic cleanup / inspection','Per-part assumption',inspection,'min/part'); // Distinguish batch and recurring work.
+    step('Report inspection time',inspectionOption==='standard'?'Standard checks included above':inspectionOption==='formal'?'30 + 10 × '+checkedParts:'60 + 20 × '+checkedParts,inspectionMinutes,'min/batch'); // Show first-article versus all-parts inspection.
     const materialTotal=materialCost*q; // Purchase material for the full order.
     const setupCost=setup/60*(prep?prep.labour:pricing.setupSARHour)+programming/60*(prep?(prep.programmingRate||prep.labour):pricing.programmingSARHour); // Amortise fixed preparation over the batch.
     const productionCost=q*(cycle/60*machineRate+inspection/60*pricing.inspectionSARHour+2); // Add machine occupancy, cleanup/inspection and consumables.
@@ -109,7 +129,21 @@
     const base=materialTotal+setupCost+productionCost+inspectionExtra+orderAllowance; // Sum costs before allowance and gross margin.
     const total=base*(1+pricing.allowance)/(1-pricing.margin); // Apply owner-controlled contingency and profit margin in that order.
     const budgetLow=Math.ceil(total/10)*10, budgetHigh=Math.ceil(total*(1+pricing.rangeHeadroom)/10)*10; // Round both planning bounds upward to SAR 10; this is a policy range, not a statistical confidence interval.
-    return {budgetLow,budgetHigh,planningTotal:budgetHigh,planningUnit:budgetHigh/q,orderAllowance,unit:total/q,total,quantity:q,setup,programming,cycle,productionHours:(setup+programming+q*(cycle+inspection)+inspectionMinutes)/60,tolerance,inspectionOption,coverage,toleranceExtraSAR:q*machiningExtraMinutes/60*machineRate*(1+pricing.allowance)/(1-pricing.margin),inspectionExtraSAR:inspectionExtra*(1+pricing.allowance)/(1-pricing.margin),route,grade:m.grade,notes,printMass,volumeCM:g.volume/1000,dims:g.dims,materialTotal,setupCost,productionCost,allowance:base*pricing.allowance,profit:total-base*(1+pricing.allowance)}; // Return detailed values; UI displays only customer-facing fields.
+    step('Batch material',materialCost+' × '+q,materialTotal,'SAR'); // Total materials for the order.
+    step('Setup + programming cost',setup+' / 60 × '+(prep?prep.labour:pricing.setupSARHour)+' + '+programming+' / 60 × '+(prep?(prep.programmingRate||prep.labour):pricing.programmingSARHour),setupCost,'SAR'); // Show the labour rates actually used.
+    step('Production cost',q+' × ('+cycle+' / 60 × '+machineRate+' + '+inspection+' / 60 × '+pricing.inspectionSARHour+' + 2 consumables)',productionCost,'SAR'); // Machine occupancy plus basic cleanup and consumables.
+    step('Additional inspection cost',inspectionMinutes+' / 60 × '+(inspectionOption==='cmm'?180:pricing.inspectionSARHour),inspectionExtra,'SAR'); // Separate optional reports.
+    step('Order handling allowance','Fixed process-specific allowance',orderAllowance,'SAR'); // Record the batch handling amount.
+    step('Underlying cost',materialTotal+' + '+setupCost+' + '+productionCost+' + '+inspectionExtra+' + '+orderAllowance,base,'SAR'); // Reconcile all cost components.
+    step('Uncertainty allowance',base+' × '+pricing.allowance,base*pricing.allowance,'SAR'); // Show the configured safety allowance.
+    step('Cost with allowance',base+' × (1 + '+pricing.allowance+')',base*(1+pricing.allowance),'SAR'); // Cost after contingency.
+    step('Selling estimate before range',base*(1+pricing.allowance)+' / (1 − '+pricing.margin+')',total,'SAR'); // Gross margin differs from a markup.
+    step('Gross profit before range',total+' − '+base*(1+pricing.allowance),total-base*(1+pricing.allowance),'SAR'); // Profit above the cost-plus-allowance amount.
+    step('Upper headroom amount',total+' × '+pricing.rangeHeadroom,total*pricing.rangeHeadroom,'SAR'); // Additional upper-budget policy allowance.
+    step('Lower budget bound','ceil('+total+' / 10) × 10',budgetLow,'SAR');step('Upper planning budget','ceil('+total+' × (1 + '+pricing.rangeHeadroom+') / 10) × 10',budgetHigh,'SAR'); // Both bounds round upward by SAR 10.
+    step('Exact upper budget per part',budgetHigh+' / '+q,budgetHigh/q,'SAR/part');step('Customer unit display','ceil('+budgetHigh+' / '+q+')',Math.ceil(budgetHigh/q),'SAR/part'); // Explain any discrepancy when rounded unit prices are multiplied.
+    step('Estimated work time','('+setup+' + '+programming+' + '+q+' × ('+cycle+' + '+inspection+') + '+inspectionMinutes+') / 60',(setup+programming+q*(cycle+inspection)+inspectionMinutes)/60,'hours/batch'); // This is work time, not delivery lead time.
+    return {trace,budgetLow,budgetHigh,planningTotal:budgetHigh,planningUnit:budgetHigh/q,orderAllowance,unit:total/q,total,quantity:q,setup,programming,cycle,productionHours:(setup+programming+q*(cycle+inspection)+inspectionMinutes)/60,tolerance,inspectionOption,coverage,toleranceExtraSAR:q*machiningExtraMinutes/60*machineRate*(1+pricing.allowance)/(1-pricing.margin),inspectionExtraSAR:inspectionExtra*(1+pricing.allowance)/(1-pricing.margin),route,grade:m.grade,notes,printMass,volumeCM:g.volume/1000,dims:g.dims,materialTotal,setupCost,productionCost,allowance:base*pricing.allowance,profit:total-base*(1+pricing.allowance)}; // Return detailed values; UI displays only customer-facing fields.
   } // End price calculation.
   root.BerafiqModel={materials,pricing,printPreparation,calculate}; // Make the model available to page code and tests.
   if(typeof module!=='undefined') module.exports=root.BerafiqModel; // Support dependency-free Node regression tests.

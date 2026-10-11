@@ -190,3 +190,27 @@ never reuse CNC/printing prices. Existing tolerance/inspection selections remain
 See [SLICER-AND-CAM.md](SLICER-AND-CAM.md) for official open-source engines,
 actual integration status and the planned printer-profile/toolpath workflow.
 The current live estimator is still geometry-based; no slicer is claimed integrated.
+
+## Separate calculation review
+
+Open `calculation-review.html` in V2 to inspect every calculation. It uses the same
+`estimate-model.js` with an additive `trace` returned alongside existing values.
+No production numerical formula was changed. The customer index and estimator UI
+are unchanged; only the review page displays trace, time, profit and allowances.
+
+Use the analytic demo cube or one STEP/STL file. Quantity, infill, support, quality
+options and temporary material/machine/margin/allowance overrides recalculate the
+trace. Restore defaults resets rate overrides, keeping the geometry and order
+requirements. Download JSON saves the inputs, active profiles, full-precision
+results and formulas locally. The review page sends no RFQs. Unsupported routes
+show that no automatic cost model exists rather than constructing a fake trace.
+
+This is an unlinked but PUBLIC page, not a secured administration page. Edits are
+in-memory and cannot change live customer defaults. Shared model rates remain
+public source code. Row values display up to six decimals; raw JSON contains full
+precision. The obsolete `pricing.printOrderAllowance` property is retained for
+compatibility but actual printing order allowances come from `printPreparation`.
+
+`tests/calculation-review.cjs` verifies arithmetic reconciliation, what-if changes,
+reset, invalid input clearing, process boundaries and exact customer rounding.
+The existing customer tests verify that calculation details remain absent there.
