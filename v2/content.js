@@ -74,6 +74,22 @@ window.BERAFIQ_CONTENT = {
       {
         title: "Sheet Metal & Fabrication",
         text: "Laser cutting, bending, forming and fabricated components routed according to material, thickness and drawing requirements."
+      },
+      {
+        title: "Laser Cutting",
+        text: "Laser-cut metal sheet and plate to your drawing, subject to material, thickness and edge-quality review."
+      },
+      {
+        title: "Plasma Cutting",
+        text: "Plasma-cut conductive metal plate, with thickness and cut-quality requirements confirmed in your quote."
+      },
+      {
+        title: "Waterjet Cutting",
+        text: "Waterjet-cut profiles with material, thickness and edge finish reviewed against your drawing."
+      },
+      {
+        title: "EDM",
+        text: "Wire EDM profiles and sinker EDM cavities in conductive materials, with tooling and electrode requirements reviewed before quoting."
       }
     ]
   },

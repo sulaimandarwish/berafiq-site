@@ -178,3 +178,15 @@ For reliable prices, compare actual same-file supplier quotes or slicer output
 against these estimates. The current browser model does not generate toolpaths,
 resin support layouts or powder build packing. Customer output remains a simple
 budget range without calculation details or times.
+
+## Cutting and EDM request routes (October 11, 2026)
+
+Added Laser Cutting, Plasma Cutting, Waterjet Cutting, Wire EDM and Sinker EDM to
+the V2 process menu and service cards. Cutting uses listed sheet/plate grades;
+EDM uses listed conductive metal grades. Thickness and sinker-electrode selections
+are included only on the relevant RFQs. These routes require reviewed quotes and
+never reuse CNC/printing prices. Existing tolerance/inspection selections remain.
+
+See [SLICER-AND-CAM.md](SLICER-AND-CAM.md) for official open-source engines,
+actual integration status and the planned printer-profile/toolpath workflow.
+The current live estimator is still geometry-based; no slicer is claimed integrated.

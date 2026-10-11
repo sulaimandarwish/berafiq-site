@@ -3,11 +3,16 @@
   const form=document.getElementById('rfqForm'),get=id=>document.getElementById(id); // Resolve the shared form.
   const first=get('requestStage1'),second=get('requestStage2'),status=get('formStatus'); // Locate the two stages and feedback.
   function options(){ // Keep tolerance choices compatible with manufacturing process.
-    const process=form.elements.process.value, sheet=process==='Sheet Metal & Fabrication'; // Identify the active manufacturing route.
-    const mode=process==='CNC Machining'?'cnc':process==='3D Printing — Polymer / Resin'?'print':sheet?'sheet':null; // Match materials to their supported process.
-    for(const option of form.elements.material.options){const profile=window.BerafiqModel.materials[option.value];option.disabled=!!(mode&&profile&&profile.mode!==mode);option.hidden=option.disabled;} // Keep unlisted/unknown material available on every route.
-    if(form.elements.material.selectedOptions[0]?.disabled)form.elements.material.value=''; // Require a new compatible grade instead of retaining an invalid selection.
-    get('sheetThicknessField').hidden=!sheet;get('sheetNotice').hidden=!sheet;get('sheetThickness').disabled=!sheet;get('sheetThickness').required=sheet; // Collect sheet thickness and include it only on sheet RFQs.
+    const process=form.elements.process.value, sheet=process==='Sheet Metal & Fabrication'; // Identify the requested production route.
+    const cutting=['Laser Cutting','Plasma Cutting','Waterjet Cutting'].includes(process),wire=process==='Wire EDM',sinker=process==='Sinker EDM',edm=wire||sinker; // Keep cutting and EDM requirements distinct.
+    const stock=sheet||cutting||wire; // Plate thickness is relevant to cutting and wire EDM.
+    const mode=process==='CNC Machining'?'cnc':process==='3D Printing — Polymer / Resin'?'print':sheet||cutting?'sheet':null; // Route materials without claiming a cutting estimator exists.
+    for(const option of form.elements.material.options){const profile=window.BerafiqModel.materials[option.value];const incompatible=profile&&(edm?!(profile.mode==='sheet'||profile.mode==='cnc'&&option.value!=='Acetal POM-C'):mode&&profile.mode!==mode);option.disabled=!!incompatible;option.hidden=option.disabled;} // EDM accepts listed conductive metals; unknown grades remain requestable for review.
+    if(form.elements.material.selectedOptions[0]?.disabled)form.elements.material.value=''; // Clear an incompatible material when switching process.
+    get('sheetThicknessField').hidden=!stock;get('sheetNotice').hidden=!(stock||sinker);get('sheetThickness').disabled=!stock;get('sheetThickness').required=stock; // Send thickness only for the applicable process.
+    get('stockThicknessLabel').textContent=wire?'Workpiece thickness (mm)':'Sheet / plate thickness (mm)'; // Label the same stock dimension accurately.
+    get('edmElectrodeField').hidden=!sinker;get('edmElectrode').disabled=!sinker;get('edmElectrode').required=sinker; // Electrode preparation is a separate sinker-EDM requirement.
+    get('sheetNotice').textContent=sinker?'Upload the cavity model and a dimensioned drawing. Electrode design, finish and tolerances will be reviewed for your quote.':wire?'Upload your profile and drawing, including workpiece thickness, tolerances and any taper or start-hole requirements. A reviewed quote is required.':cutting?'Upload a DXF or dimensioned drawing with material, thickness and edge-finish requirements. Grade, thickness and machine suitability will be confirmed in a reviewed quote.':'Sheet metal is quoted after review of thickness, cutting, bends, finish and inspection. For galvanized stock, include the coating designation in your drawing or notes.'; // Show customer requirements instead of costing internals.
     const cnc=form.elements.process.value==='CNC Machining',select=get('toleranceSelect'); // Numeric tolerance presets apply only to CNC.
     select.querySelectorAll('[data-cnc]').forEach(o=>{o.hidden=!cnc;o.disabled=!cnc;}); // Hide unsupported precision choices.
     if(!cnc&&!['standard','custom'].includes(select.value))select.value='standard'; // Remove an obsolete CNC choice after changing process.
