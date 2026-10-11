@@ -95,7 +95,7 @@
           <div id="fileList" class="file-list"></div>
 
           <div class="form-grid">
-            <label><span>Process</span><select name="process" required><option value="">Select process</option><option>CNC Machining</option><option>3D Printing — Polymer / Resin</option><option>Sheet Metal & Fabrication</option><option>Not sure / Other</option></select></label>
+            <label><span>Process</span><select name="process" required><option value="">Select process</option><option>CNC Machining</option><option>3D Printing — Polymer / Resin</option><option>Sheet Metal & Fabrication</option><option>Laser Cutting</option><option>Plasma Cutting</option><option>Waterjet Cutting</option><option>Wire EDM</option><option>Sinker EDM</option><option>Not sure / Other</option></select></label>
             <label><span>Material</span><select name="material" required>
               <option value="">Select material</option>
               <optgroup label="Machining metals">
@@ -153,8 +153,9 @@
               </optgroup>
             </select></label>
             <p class="wide option-help">Select the alloy and condition you require. Supplier availability and certification are confirmed with your quote. For an unlisted grade or a specific polymer/resin brand, choose “Not sure / other” and add the exact specification in stage 2 notes.</p>
-            <label class="wide" id="sheetThicknessField" hidden><span>Sheet thickness (mm)</span><select name="sheet_thickness" id="sheetThickness" disabled><option value="">Select thickness</option><option>0.5 mm</option><option>0.8 mm</option><option>1 mm</option><option>1.2 mm</option><option>1.5 mm</option><option>2 mm</option><option>2.5 mm</option><option>3 mm</option><option>4 mm</option><option>5 mm</option><option>6 mm</option><option>Other / as specified on drawing</option></select></label>
+            <label class="wide" id="sheetThicknessField" hidden><span id="stockThicknessLabel">Sheet / plate thickness (mm)</span><select name="sheet_thickness" id="sheetThickness" disabled><option value="">Select thickness</option><option>0.5 mm</option><option>0.8 mm</option><option>1 mm</option><option>1.2 mm</option><option>1.5 mm</option><option>2 mm</option><option>2.5 mm</option><option>3 mm</option><option>4 mm</option><option>5 mm</option><option>6 mm</option><option>8 mm</option><option>10 mm</option><option>12 mm</option><option>15 mm</option><option>20 mm</option><option>25 mm</option><option>30 mm</option><option>40 mm</option><option>50 mm</option><option>Other / as specified on drawing</option></select></label>
             <p class="wide option-help" id="sheetNotice" hidden>Sheet metal is quoted after review of thickness, cutting, bends, finish and inspection. Thickness and grade availability are subject to supplier confirmation. For galvanized sheet, specify coating designation in your drawing or stage 2 notes. No automatic sheet-metal price is calculated.</p>
+            <label class="wide" id="edmElectrodeField" hidden><span>Sinker EDM electrode</span><select name="edm_electrode" id="edmElectrode" disabled><option value="">Select electrode requirement</option><option>Supplier to design and manufacture</option><option>Customer supplied</option><option>Not sure — review with supplier</option></select></label>
             <label><span>Quantity</span><input name="quantity" type="number" min="1" placeholder="e.g. 4" required></label>
             <label><span>Required by</span><select name="lead_time" required><option value="">Select timing</option><option>Within 1 week</option><option>Within 2 weeks</option><option>Flexible</option></select></label>
 
@@ -236,6 +237,10 @@
         <article><b>02</b><h3>CNC Turning</h3><p>Shafts, sleeves, bushings, pins, threaded parts and other rotational components across a range of engineering materials.</p></article>
         <article><b>03</b><h3>3D Printing</h3><p>Rapid prototypes, functional parts and low-volume production using polymer and resin additive-manufacturing processes.</p></article>
         <article><b>04</b><h3>Sheet Metal &amp; Fabrication</h3><p>Laser cutting, bending, forming and fabricated components routed according to material, thickness and drawing requirements.</p></article>
+        <article><b>05</b><h3>Laser Cutting</h3><p>Laser-cut metal sheet and plate to your drawing, subject to material, thickness and edge-quality review.</p></article>
+        <article><b>06</b><h3>Plasma Cutting</h3><p>Plasma-cut conductive metal plate, with thickness and cut-quality requirements confirmed in your quote.</p></article>
+        <article><b>07</b><h3>Waterjet Cutting</h3><p>Waterjet-cut profiles with material, thickness and edge finish reviewed against your drawing.</p></article>
+        <article><b>08</b><h3>EDM</h3><p>Wire EDM profiles and sinker EDM cavities in conductive materials, with tooling and electrode requirements reviewed before quoting.</p></article>
       </div>
     </section>
 
@@ -296,13 +301,13 @@
     </div>
   </div>
 
-  <script src="content.js?v=8"></script>
+  <script src="content.js?v=12"></script>
   <script src="app.js?v=4"></script>
   <script src="journey.js"></script>
   <script src="estimator-config.js?v=4"></script>
   <script src="estimate-model.js?v=11"></script>
-  <script src="request-flow.js?v=10"></script>
-  <script src="estimator.js?v=10"></script>
+  <script src="request-flow.js?v=12"></script>
+  <script src="estimator.js?v=12"></script>
 </body>
 </html>
 
