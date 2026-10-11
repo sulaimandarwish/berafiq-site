@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>BeRafiq · Calculation review</title>
+  <link rel="stylesheet" href="calculation-review.css?v=13">
+</head>
+<body>
+  <header><a href="index.html">← Customer V2</a><span>BeRafiq · calculation review</span></header>
+  <main>
+    <h1>See where every riyal comes from.</h1>
+    <p class="intro">The same calculation engine as V2, with every intermediate value exposed. This is the current geometry-based model—not a real slicer or CAM simulation.</p>
+    <p class="notice">Public review page, not a secured admin area. Changes here are temporary in this browser and do not change customer pricing. No RFQs or emails are sent.</p>
+    <div class="layout">
+      <section class="panel inputs" aria-label="Calculation inputs">
+        <h2>1. Part & requirements</h2>
+        <label>Process<select id="process"><option>CNC Machining</option><option selected>3D Printing — Polymer / Resin</option><option>Sheet Metal & Fabrication</option><option>Laser Cutting</option><option>Plasma Cutting</option><option>Waterjet Cutting</option><option>Wire EDM</option><option>Sinker EDM</option></select></label>
+        <label>Material<select id="material"></select></label>
+        <label>Quantity<input id="quantity" type="number" min="1" max="10000" step="1" value="1" required></label>
+        <div class="pair"><label>FDM infill (%)<input id="infill" type="number" min="0" max="100" value="20" required></label><label>Support / waste (%)<input id="support" type="number" min="0" max="100" value="20" required></label></div>
+        <label>Tolerance<select id="tolerance"><option value="standard">Standard</option><option value="0.05">±0.05 mm</option><option value="0.025">±0.025 mm</option><option value="0.01">±0.01 mm</option><option value="0.005">±0.005 mm</option><option value="custom">Custom — reviewed quote</option></select></label>
+        <label>Inspection<select id="inspection"><option value="standard">Standard</option><option value="formal">Dimensional report</option><option value="cmm">CMM report</option><option value="custom">Custom — reviewed quote</option></select></label>
+        <label>Coverage<select id="coverage"><option value="first">First article</option><option value="all">Every part</option></select></label>
+        <h2>2. Geometry</h2>
+        <label>Upload STEP/STP or closed STL<input id="modelFile" type="file" accept=".step,.stp,.stl"></label>
+        <label>STL units<select id="units"><option value="1">Millimetres</option><option value="25.4">Inches</option><option value="10">Centimetres</option><option value="1000">Metres</option></select></label>
+        <p>Or use a known solid cube to check the arithmetic:</p>
+        <div class="pair"><label>Cube side (mm)<input id="cubeSide" type="number" min="0.1" max="1000" step="any" value="10" required></label><button id="useCube" type="button">Use demo cube</button></div>
+        <p id="geometryInfo" class="note"></p>
+        <h2>3. What-if pricing</h2>
+        <p>These temporary overrides affect this review only.</p>
+        <label>Material cost (SAR/kg)<input id="materialRate" type="number" min="0" step="any" required></label>
+        <label>Machine cost (SAR/hour)<input id="machineRate" type="number" min="0" step="any" required></label>
+        <label>Gross profit margin (%)<input id="margin" type="number" min="0" max="95" step="any" required></label>
+        <label>Uncertainty allowance (%)<input id="allowance" type="number" min="0" max="200" step="any" required></label>
+        <label>Upper range headroom (%)<input id="headroom" type="number" min="0" max="200" step="any" required></label>
+        <div class="actions"><button id="calculate" type="button">Recalculate</button><button id="reset" type="button">Restore defaults</button></div>
+      </section>
+      <section class="panel output" aria-label="Calculation breakdown">
+        <p id="status" role="status" aria-live="polite"></p>
+        <div id="result" hidden>
+          <h2>Customer-facing planning budget</h2>
+          <strong id="headline" class="price"></strong><p id="range"></p>
+          <p>Tax and delivery excluded. Not a confirmed quotation or guaranteed maximum. Values below are displayed to six decimals; calculations retain full precision.</p>
+          <h2>Every calculation step</h2>
+          <div class="table-wrap"><table><thead><tr><th>Step</th><th>Formula / source</th><th>Result</th></tr></thead><tbody id="steps"></tbody></table></div>
+          <h2>Assumptions & limits</h2><p id="notes"></p>
+          <details><summary>Full material, pricing and preparation settings</summary><pre id="settings"></pre></details>
+          <details><summary>Raw calculation data</summary><pre id="raw"></pre></details>
+          <button id="download" type="button">Download calculation JSON</button>
+        </div>
+      </section>
+    </div>
+    <footer><a href="https://github.com/sulaimandarwish/berafiq-site/blob/main/v2/estimate-model.js">Read the calculation code</a> · <a href="https://github.com/sulaimandarwish/berafiq-site/blob/main/v2/SLICER-AND-CAM.md">Slicer / CAM integration status</a></footer>
+  </main>
+  <script src="estimate-model.js?v=13"></script>
+  <script src="calculation-review.js?v=13"></script>
+</body>
+</html>
